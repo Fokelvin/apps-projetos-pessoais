@@ -46,16 +46,24 @@ class HomeScreen extends StatelessWidget {
       
       //AppBar
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.local_bar), // Ícone de bar
-            SizedBox(width: 8), // Espaçamento entre o ícone e o texto
-            Text('Meu Buteco',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
-            ),
+        title: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.local_bar,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  "Meu Buteco",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                )
+              ],
+            )
           ],
         ),
         centerTitle: true,

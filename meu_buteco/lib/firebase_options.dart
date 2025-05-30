@@ -83,4 +83,5 @@ class DefaultFirebaseOptions {
     authDomain: 'meu-buteco-c7afd.firebaseapp.com',
     storageBucket: 'meu-buteco-c7afd.firebasestorage.app',
   );
+
 }
