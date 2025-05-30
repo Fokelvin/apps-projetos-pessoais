@@ -1,3 +1,3 @@
 # meu_buteco
 
-A new Flutter project.
+Um projeto pessoal onde vou desenvolver um guia de butecos
