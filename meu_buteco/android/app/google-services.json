@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "515281116408",
+    "project_id": "meu-buteco-c7afd",
+    "storage_bucket": "meu-buteco-c7afd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:515281116408:android:9aa9e885828d5128e76f0d",
+        "android_client_info": {
+          "package_name": "com.example.meu_buteco"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwsCh9F5xFAUnkEMvACpEzdbUxzErZwdQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
