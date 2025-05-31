@@ -11,7 +11,6 @@ final _formKey = GlobalKey<FormState>();
 final nomeController = TextEditingController();
 final endercoController = TextEditingController();
 
-class _CadastroBarState extends State<CadastroBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
