@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meu_buteco/models/bar_model.dart';
 
 class CadastroBar extends StatefulWidget {
   const CadastroBar({super.key});
@@ -7,9 +8,12 @@ class CadastroBar extends StatefulWidget {
   State<CadastroBar> createState() => _CadastroBarState();
 }
 
-final _formKey = GlobalKey<FormState>();
-final nomeController = TextEditingController();
-final endercoController = TextEditingController();
+class _CadastroBarState extends State<CadastroBar> {
+
+  final _formKey = GlobalKey<FormState>();
+  final nomeController = TextEditingController();
+  final endercoController = TextEditingController();
+  final linkController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -23,43 +27,74 @@ final endercoController = TextEditingController();
         padding: EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                controller: nomeController,
-                decoration: const InputDecoration(
-                  labelText: "Nome do Bar"
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                
+                //Campo 1
+                TextFormField(
+                  controller: nomeController,
+                  decoration: const InputDecoration(
+                    labelText: "Nome do Bar"
+                  ),
+                  validator: (value) =>
+                    value == null || value.isEmpty ? "Informe o nome" : null,
                 ),
-                validator: (value) =>
-                  value == null || value.isEmpty ? "Informe o nome" : null,
-              ),
-              TextFormField(
-                controller: nomeController,
-                decoration: const InputDecoration(
-                  labelText: "Endereço do Bar"
-                ),
-                validator: (value) =>
-                  value == null || value.isEmpty ? "Informe o endereço" : null,
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                ),
-                onPressed: (){
-                  if(_formKey.currentState!.validate()){
 
-                  }
-                }, 
-                child: const Text("Salvar")
-              )
-            ],
-          )
+                const SizedBox(height: 24),
+                
+                //Campo 2
+                TextFormField(
+                  controller: endercoController,
+                  decoration: const InputDecoration(
+                    labelText: "Endereço do Bar"
+                  ),
+                  validator: (value) =>
+                    value == null || value.isEmpty ? "Informe o endereço" : null,
+                ),
+
+                const SizedBox(height: 24),
+
+                //Campo3
+                  TextFormField(
+                  controller: linkController,
+                  decoration: const InputDecoration(
+                    labelText: "Link imagem"
+                  ),
+                  validator: (value) =>
+                    value == null || value.isEmpty ? "informe o link" : null,
+                ),
+                
+                const SizedBox(height: 24),
+
+                //Botao
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  onPressed: () async{
+                    if(_formKey.currentState!.validate()){
+                      print('Botão pressionado');
+                      final bar = BarModel(
+                        nomeController.text, 
+                        endercoController.text, 
+                        linkController.text
+                      );
+                      print('Dados bar: $bar');
+                      await bar.salvarNoFirebase();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Novo bar salvo com sucesso")),
+                      );
+                    }
+                  }, 
+                  child: const Text("Salvar")
+                )
+              ],
+            )
+          ),
         ),
       ),
     );
   }
 }
-
-//57U:FhnH.rAegrR

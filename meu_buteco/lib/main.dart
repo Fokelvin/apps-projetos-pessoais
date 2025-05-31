@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:meu_buteco/firebase_options.dart';
 import 'package:meu_buteco/screens/home_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:scoped_model/scoped_model.dart';
 
-void main() {
-  runApp(const MainApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform, // ou apenas Firebase.initializeApp();
+  );
+  runApp(MainApp());
 }
 
 class MainApp extends StatelessWidget {
@@ -19,3 +26,4 @@ class MainApp extends StatelessWidget {
     );
   }
 }
+
