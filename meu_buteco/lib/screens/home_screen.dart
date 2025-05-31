@@ -1,50 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:meu_buteco/screens/cadastro_bar_screen.dart';
 import 'package:meu_buteco/screens/mapa_scren.dart';
+import '../drawer/drawer.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
 
-    final List<Map<String, String>> bares = [
-      {'nome': 'Bar do Zé', 'endereco': 'Rua 1, 123'},
-      {'nome': 'Buteco da Ana', 'endereco': 'Av. Central, 456'},
-      {'nome': 'Bar do João', 'endereco': 'Praça 7, 789'},
-    ];
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _currentIndex = 0;
+  PageController _pageController = PageController();
+
+  final List<Map<String, String>> bares = [
+    {'nome': 'Bar do Zé', 'endereco': 'Rua 1, 123'},
+    {'nome': 'Buteco da Ana', 'endereco': 'Av. Central, 456'},
+    {'nome': 'Bar do João', 'endereco': 'Praça 7, 789'},
+  ];
+
   @override
   Widget build(BuildContext context) {
-
-    //Scafold
     return Scaffold(
-      //Drawer
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              child: const Text(
-                "Opções",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.add_business),
-              title: Text("Cadastrar Bar"),
-              onTap: (){
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => CadastroBar()),
-                );
-              },
-            )
-          ],
-        ),
-      ),
-      
-      //AppBar
+      // Drawer
+      drawer: const AppDrawer(),
+      // AppBar
       appBar: AppBar(
         title: Stack(
           alignment: Alignment.center,
@@ -70,8 +51,14 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
 
-      //PageView
+      // PageView
       body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
         children: [
           // Página de lista de bares com título "Destaques"
           Column(
@@ -118,15 +105,18 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       
-      //Navigation icons
+      // Navigation icons
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0, // Página inicial selecionada
+        currentIndex: _currentIndex,
         onTap: (index) {
-          if (index == 1) {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => MapaScreen()),
-            );
-          }
+          setState(() {
+            _currentIndex = index;
+          });
+          _pageController.animateToPage(
+            index,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
         },
         items: const [
           BottomNavigationBarItem(
