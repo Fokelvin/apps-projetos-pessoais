@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:meu_buteco/screens/cadastro_bar_screen.dart';
 import 'package:meu_buteco/screens/mapa_scren.dart';
 import '../drawer/drawer.dart';
+
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
@@ -108,6 +108,9 @@ class _HomeScreenState extends State<HomeScreen> {
       // Navigation icons
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
+        selectedItemColor: Colors.white,      // Ícone/texto selecionado branco
+        unselectedItemColor: Colors.white70,  // Ícone/texto não selecionado levemente acinzentado
+        backgroundColor: Theme.of(context).colorScheme.primary, // Fundo igual ao AppBar
         onTap: (index) {
           setState(() {
             _currentIndex = index;
