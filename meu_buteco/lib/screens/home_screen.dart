@@ -33,7 +33,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.local_bar,
+                Icon(Icons.sports_bar_sharp,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),                
+                Icon(Icons.favorite,
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
                 SizedBox(width: 8),
@@ -85,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         leading: CircleAvatar(
                           backgroundColor: Theme.of(context).colorScheme.primary.withAlpha(25),
                           backgroundImage: NetworkImage(
-                            'https://via.placeholder.com/48',
+                            'https://placehold.co/600x400.png',
                           ),
                         ),
                         title: Text(bar['nome']!),
@@ -108,8 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
       // Navigation icons
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        selectedItemColor: Colors.white,      // Ícone/texto selecionado branco
-        unselectedItemColor: Colors.white70,  // Ícone/texto não selecionado levemente acinzentado
+        selectedItemColor: Colors.black,      // Ícone/texto selecionado branco
+        unselectedItemColor: Colors.grey[900],  // Ícone/texto não selecionado levemente acinzentado
         backgroundColor: Theme.of(context).colorScheme.primary, // Fundo igual ao AppBar
         onTap: (index) {
           setState(() {

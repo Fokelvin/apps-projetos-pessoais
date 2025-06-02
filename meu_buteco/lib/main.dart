@@ -21,39 +21,46 @@ class MainApp extends StatelessWidget {
         title: 'Meu Buteco',
         theme: ThemeData(
           colorScheme: ColorScheme(
-            brightness: Brightness.dark, // deixa tudo escuro
-            primary: Colors.purple[900]!,
-            onPrimary: Colors.white,
-            secondary: Colors.purple[900]!,
-            onSecondary: Colors.white,
-            surface: Colors.purple[900]!,
-            onSurface: Colors.white,
+            brightness: Brightness.light,
+            primary: Colors.white,      // fundo e botões principais
+            onPrimary: Colors.black,    // textos/ícones sobre primary
+            secondary: Colors.white,    // pode ser igual ao primary
+            onSecondary: Colors.black,
+            surface: Colors.white,
+            onSurface: Colors.black,
             error: Colors.red,
             onError: Colors.white,
           ),
-          scaffoldBackgroundColor: Colors.purple[900]!, // fundo das telas
+            inputDecorationTheme: InputDecorationTheme(
+            labelStyle: TextStyle(color: Colors.black), // label quando não focado
+            floatingLabelStyle: TextStyle(color: Colors.purple[900]),
+            filled: true, // ativa o preenchimento
+            fillColor: Colors.grey[100], // cor de fundo levemente cinza
+            border: OutlineInputBorder(), // borda padrão
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey), // borda quando não focado
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.purple[900]!), // borda quando focado
+            ), // label quando focado
+          ),
+          scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.purple, // cor do AppBar
-            foregroundColor: Colors.white,    // cor dos textos/ícones do AppBar
-            iconTheme: IconThemeData(color: Colors.white),
-            titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+            iconTheme: IconThemeData(color: Colors.black),
+            titleTextStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 22),
           ),
           textTheme: const TextTheme(
-            bodyLarge: TextStyle(color: Colors.white),
-            bodyMedium: TextStyle(color: Colors.white),
-            bodySmall: TextStyle(color: Colors.white),
-            titleLarge: TextStyle(color: Colors.white),
-            titleMedium: TextStyle(color: Colors.white),
-            titleSmall: TextStyle(color: Colors.white),
-            labelLarge: TextStyle(color: Colors.white),
-            labelMedium: TextStyle(color: Colors.white),
-            labelSmall: TextStyle(color: Colors.white),
+            bodyLarge: TextStyle(color: Colors.black),
+            bodyMedium: TextStyle(color: Colors.black),
+            bodySmall: TextStyle(color: Colors.black),
           ),
         ),
         home: HomeScreen(),
         routes: {
           '/login': (context) => const LoginScreen(),
-          '/signup': (context) => const CadastroUsuarioScreen(), // <-- nova rota
+          '/signup': (context) => const CadastroUsuarioScreen(),
         },
       ),
     );

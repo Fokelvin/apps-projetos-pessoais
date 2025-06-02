@@ -9,29 +9,21 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget buildDrawerBack() => Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Theme.of(context).colorScheme.surface,
-            Colors.white,
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      ),
+      color: Theme.of(context).colorScheme.primary,
     );
 
     return Drawer(
       child: IconTheme(
-        data: const IconThemeData(
-          color: Colors.white, // todos os ícones filhos serão brancos
+        data: IconThemeData(
+          color: Colors.black, // todos os ícones filhos serão brancos
         ),
         child: Theme(
           data: Theme.of(context).copyWith(
-            listTileTheme: const ListTileThemeData(
-              selectedColor: Colors.white, // cor do texto/ícone selecionado
-              iconColor: Colors.white,     // cor dos ícones
-              textColor: Colors.white,     // cor do texto
+            listTileTheme: ListTileThemeData(
+              selectedColor: Colors.black, // cor do texto/ícone selecionado
+              iconColor: Colors.black,     // cor dos ícones
+              textColor: Colors.black,    
+              selectedTileColor: Colors.transparent, // cor do texto
             ),
           ),
           child: Stack(
@@ -43,7 +35,6 @@ class AppDrawer extends StatelessWidget {
                   Container(
                     margin: const EdgeInsets.only(bottom: 16.0),
                     padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 8.0),
-                    height: 170.0,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -58,6 +49,7 @@ class AppDrawer extends StatelessWidget {
                         const SizedBox(height: 16.0),
                         Consumer<UserProvider>(
                           builder: (context, userProvider, child) {
+                            final isLogged = userProvider.isLoggedIn();
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -72,32 +64,26 @@ class AppDrawer extends StatelessWidget {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context).pushNamed('/login');
+                                    if (isLogged) {
+                                      userProvider.signOut();
+                                    } else {
+                                      Navigator.of(context).pushNamed('/login');
+                                    }
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.only(top: 8.0),
                                     child: Row(
                                       children: [
-                                        const Icon(Icons.login, size: 20),
+                                        Icon(isLogged ? Icons.logout : Icons.login, size: 20, color: Colors.black),
                                         const SizedBox(width: 8),
-                                        const Text("Login"),
+                                        Text(
+                                          isLogged ? "Sair" : "Login",
+                                          style: const TextStyle(color: Colors.black),
+                                        ),
                                       ],
                                     ),
                                   ),
                                 ),
-                                if (userProvider.isLoggedIn())
-                                  ListTile(
-                                    leading: Icon(Icons.add_business),
-                                    title: Text(
-                                      "Início",
-                                      style: const TextStyle(color: Colors.white), // força branco
-                                    ),
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(builder: (context) => CadastroBar()),
-                                      );
-                                    },
-                                  ),
                               ],
                             );
                           },

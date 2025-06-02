@@ -130,7 +130,7 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
                   height: 44.00,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
+                      foregroundColor: Colors.purple[900],
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.zero,
@@ -166,7 +166,7 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
                   height: 44.00,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
+                      foregroundColor: Colors.purple[900],
                       backgroundColor: Theme.of(context).primaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.zero,
@@ -198,8 +198,9 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
 
   // Função chamada em caso de falha no cadastro
   void _onFail(String errorMessage) {
+    print('Erro ao criar usuário: $errorMessage');
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Falha ao criar usuário!"))
+      const SnackBar(content: Text("Falha ao criar usuário!: "))
     );
   }
 
