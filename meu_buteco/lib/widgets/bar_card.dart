@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'avaliacoes_widget.dart';
 
 class BarCard extends StatelessWidget {
   final Map<String, dynamic> bar;
@@ -79,33 +80,6 @@ class BarCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (bar["linkImagem"] != null)
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 16.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.network(
-                              bar["linkImagem"],
-                              height: 120,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  height: 120,
-                                  width: double.infinity,
-                                  color: Colors.grey[300],
-                                  child: const Icon(
-                                    Icons.image_not_supported,
-                                    size: 50,
-                                    color: Colors.grey,
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
                     const Center(
                       child: Text(
                         "Avaliações",
@@ -116,46 +90,93 @@ class BarCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    const Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.wc, size: 16, color: Colors.blue),
-                            SizedBox(width: 8),
-                            Expanded(child: Text("Banheiro limpo e bem cuidado")),
+                            const Icon(Icons.wc, size: 16, color: Colors.blue),
+                            const SizedBox(width: 8),
+                            const Expanded(child: Text("Banheiro")),
+                            AvaliacoesWidget(rating: 4.0),
                           ],
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Row(
                           children: [
-                            Icon(Icons.local_bar, size: 16, color: Colors.orange),
-                            SizedBox(width: 8),
-                            Expanded(child: Text("Ótima variedade de bebidas")),
+                            const Icon(Icons.local_bar, size: 16, color: Colors.orange),
+                            const SizedBox(width: 8),
+                            const Expanded(child: Text("Bebidas")),
+                            AvaliacoesWidget(rating: 3.5),
                           ],
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Row(
                           children: [
-                            Icon(Icons.music_note, size: 16, color: Colors.green),
-                            SizedBox(width: 8),
-                            Expanded(child: Text("Ambiente com boa música")),
+                            const Icon(Icons.music_note, size: 16, color: Colors.green),
+                            const SizedBox(width: 8),
+                            const Expanded(child: Text("Comidas")),
+                            AvaliacoesWidget(rating: 4.5),
                           ],
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Row(
                           children: [
-                            Icon(Icons.group, size: 16, color: Colors.purple),
-                            SizedBox(width: 8),
-                            Expanded(child: Text("Atendimento cordial")),
+                            const Icon(Icons.group, size: 16, color: Colors.purple),
+                            const SizedBox(width: 8),
+                            const Expanded(child: Text("Atendimento")),
+                            AvaliacoesWidget(rating: 5.0),
                           ],
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Row(
                           children: [
-                            Icon(Icons.star, size: 16, color: Colors.amber),
-                            SizedBox(width: 8),
-                            Expanded(child: Text("Preços justos")),
+                            const Icon(Icons.star, size: 16, color: Colors.amber),
+                            const SizedBox(width: 8),
+                            const Expanded(child: Text("Preços")),
+                            AvaliacoesWidget(rating: 3.0),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                // TODO: Implementar ver tudo
+                              },
+                              child: const Text(
+                                "Ver tudo",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // TODO: Implementar avaliar
+                              },
+                              child: const Text(
+                                "Avaliar",
+                                style: TextStyle(
+                                  color: Colors.orange,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // TODO: Implementar ver no mapa
+                              },
+                              child: const Text(
+                                "Ver no mapa",
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ],

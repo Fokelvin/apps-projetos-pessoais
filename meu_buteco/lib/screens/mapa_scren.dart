@@ -11,7 +11,9 @@ class MapBarScreen extends StatefulWidget {
 }
 
 class _MapBarScreenState extends State<MapBarScreen> {
-  final Set<Marker> _markers = {};
+  Set<Marker> _markers = {};
+  Map<String, dynamic>? _selectedBar;
+  bool _showBarCard = false;
   final CameraPosition _cameraPosition = const CameraPosition(
     target: LatLng(-19.924648889180805, -43.93786504763702),
     zoom: 13,
@@ -36,145 +38,62 @@ class _MapBarScreenState extends State<MapBarScreen> {
     super.dispose();
   }
 
+
   Future<void> _carregarBares() async {
-    // ALTERAÇÃO: Verificação de 'mounted' antes de setState para evitar erro
-    if (!mounted) return;
-    
-    setState(() {
-      _isLoading = true;
-    });
-    
     try {
-      final bares = await BarModel.buscarBares();
+      final lista = await BarModel.buscarBares();
       
-      // ALTERAÇÃO: Verificação de 'mounted' após operação assíncrona
       if (!mounted) return;
+      
+      // Definir o bar mais próximo
+      if (lista.isNotEmpty) {
+        final primeiroBar = lista.first;
+        final lat = BarModel.parseCoordinate(primeiroBar['lat'], 'lat');
+        final lng = BarModel.parseCoordinate(primeiroBar['long'], 'long');
+        _closestBar = LatLng(lat, lng);
+        _closestBarName = primeiroBar['nome'];
 
-      Position? userPosition;
-      try {
-        LocationPermission permission = await Geolocator.checkPermission();
-        if (permission == LocationPermission.denied) {
-          permission = await Geolocator.requestPermission();
-          if (permission == LocationPermission.denied) {
-            throw Exception('Permissão de localização negada');
-          }
-        }
-
-        if (permission == LocationPermission.deniedForever) {
-          throw Exception('Permissão de localização negada permanentemente');
-        }
-
-        userPosition = await Geolocator.getCurrentPosition(
-          locationSettings: const LocationSettings(
-            accuracy: LocationAccuracy.high,
-            distanceFilter: 100,
-          ),
-        );
-        
-        // ALTERAÇÃO: Verificação de 'mounted' após obter localização
-        if (!mounted) return;
-        
-      } catch (e) {
-        print('Erro ao obter localização: $e');
-        userPosition = null;
+        _selectedBar = primeiroBar;
+        _showBarCard  = true;
       }
-
-      double minDist = double.infinity;
-      LatLng? closestBar;
-      String? closestBarName;
-      String? closestBarId;
-
-      // Primeiro loop - encontra o bar mais próximo
-      if (userPosition != null) {
-        for (var bar in bares) {
-          final lat = double.tryParse(bar['lat'].toString()) ?? 0.0;
-          final lng = double.tryParse(bar['long'].toString()) ?? 0.0;
-          
-          final dist = Geolocator.distanceBetween(
-            userPosition.latitude,
-            userPosition.longitude,
-            lat,
-            lng,
-          );
-          
-          if (dist < minDist) {
-            minDist = dist;
-            closestBar = LatLng(lat, lng);
-            closestBarName = bar['nome'];
-            closestBarId = bar['nome'];
-          }
-        }
-      }
-
-      // ALTERAÇÃO: Verificação de 'mounted' antes de setState para evitar erro
-      if (!mounted) return;
-
+      
       setState(() {
-        _markers.clear();
-        
-        // Segundo loop - cria os marcadores com o conhecimento de qual é o mais próximo
-        for (var bar in bares) {
-          final lat = double.tryParse(bar['lat'].toString()) ?? 0.0;
-          final lng = double.tryParse(bar['long'].toString()) ?? 0.0;
-          final markerPos = LatLng(lat, lng);
-          final isClosest = bar['nome'] == closestBarId;
-
-          _markers.add(
-            Marker(
-              markerId: MarkerId(bar['nome']),
-              position: markerPos,
-              infoWindow: InfoWindow(
-                title: bar['nome'],
-                snippet: isClosest && userPosition != null 
-                    ? 'Bar mais próximo - ${(minDist / 1000).toStringAsFixed(2)} km' 
-                    : null,
-              ),
-              icon: isClosest && userPosition != null 
-                  ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)
-                  : BitmapDescriptor.defaultMarker,
+        _markers = lista.map((bar) {
+          final lat = BarModel.parseCoordinate(bar['lat'], 'lat');
+          final lng = BarModel.parseCoordinate(bar['long'], 'long');
+          
+          return Marker(
+            markerId: MarkerId(bar['nome']),
+            position: LatLng(lat, lng),
+            infoWindow: InfoWindow(
+              title: bar['nome'],
+              snippet: bar['endereco'] ?? 'Endereço não informado',
+              onTap: () {
+                if (!mounted) return;
+                setState(() {
+                  _selectedBar = bar;
+                  _showBarCard = true;
+                });
+              },
             ),
+            onTap: () {
+              if (!mounted) return;
+              setState(() {
+                _selectedBar = bar;
+                _showBarCard = true;
+              });
+            },
           );
-        }
-
-        // Armazena informações do bar mais próximo
-        if (closestBar != null) {
-          _closestBar = closestBar;
-          _closestBarName = closestBarName;
-        }
-        
+        }).toSet();
         _isLoading = false;
       });
-
-      // ALTERAÇÃO: Animação da câmera com verificações adicionais de 'mounted' e try-catch
-      if (closestBar != null && mounted) {
-        // Aguarda um pequeno delay para garantir que o mapa foi renderizado
-        Future.delayed(const Duration(milliseconds: 500), () async {
-          // ALTERAÇÃO: Verificação de 'mounted' após delay
-          if (_mapController != null && mounted) {
-            try {
-              await _mapController!.animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: closestBar!, 
-                    zoom: 17,
-                  ),
-                ),
-              );
-            } catch (e) {
-              // ALTERAÇÃO: Try-catch para capturar erros de animação
-              print('Erro ao animar câmera: $e');
-            }
-          }
-        });
-      }
     } catch (e) {
       print('Erro ao carregar bares: $e');
-      // ALTERAÇÃO: Verificação de 'mounted' antes de setState no catch
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+      if (!mounted) return;
+      setState(() {
+        _markers = {};
+        _isLoading = false;
+      });
     }
   }
 
@@ -200,28 +119,11 @@ class _MapBarScreenState extends State<MapBarScreen> {
           GoogleMap(
             initialCameraPosition: _cameraPosition,
             markers: _markers,
-            onMapCreated: (controller) async {
-              _mapController = controller;
-              
-              // ALTERAÇÃO: Verificação de 'mounted' e try-catch na criação do mapa
-              if (_closestBar != null && mounted) {
-                try {
-                  await Future.delayed(const Duration(milliseconds: 300));
-                  // ALTERAÇÃO: Verificação adicional após delay
-                  if (mounted) {
-                    await _mapController!.animateCamera(
-                      CameraUpdate.newCameraPosition(
-                        CameraPosition(
-                          target: _closestBar!, 
-                          zoom: 17,
-                        ),
-                      ),
-                    );
-                  }
-                } catch (e) {
-                  // ALTERAÇÃO: Try-catch para capturar erros na animação inicial
-                  print('Erro ao animar câmera inicial: $e');
-                }
+            onMapCreated: (controller) {
+              try {
+                _mapController = controller;
+              } catch (e) {
+                print('Erro ao criar mapa: $e');
               }
             },
             myLocationEnabled: true,

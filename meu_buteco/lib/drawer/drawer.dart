@@ -78,7 +78,7 @@ class AppDrawer extends StatelessWidget {
                                         const SizedBox(width: 8),
                                         Text(
                                           isLogged ? "Sair" : "Login",
-                                          style: const TextStyle(color: Colors.black),
+                                          style: const TextStyle(color: Colors.black, fontSize: 20),
                                         ),
                                       ],
                                     ),

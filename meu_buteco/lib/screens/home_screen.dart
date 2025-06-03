@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:meu_buteco/screens/mapa_scren.dart';
 import '../drawer/drawer.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geocoding/geocoding.dart';
 import '../models/bar_model.dart';
-import '../widgets/bar_card.dart'; // ajuste o caminho se necessário
+import '../widgets/bar_card.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
@@ -18,24 +16,21 @@ class _HomeScreenState extends State<HomeScreen> {
   PageController _pageController = PageController();
 
   List<Map<String, dynamic>> bares = [];
-  List<bool> _expanded = []; // Lista para controlar quais cards estão expandidos
+  List<bool> _expanded = [];
 
   @override
   void initState() {
     super.initState();
     _buscarBares();
-    // Limpa qualquer dado antigo do PageStorage que possa estar causando conflito
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _clearPageStorage();
     });
   }
 
-  // Método para limpar o PageStorage e evitar conflitos
   void _clearPageStorage() {
     try {
       final pageStorage = PageStorage.maybeOf(context);
       if (pageStorage != null) {
-        // Limpa dados antigos que podem estar causando conflito de tipos
         pageStorage.writeState(context, null);
       }
     } catch (e) {
@@ -52,9 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Drawer
       drawer: const AppDrawer(),
-      // AppBar
       appBar: AppBar(
         title: Stack(
           alignment: Alignment.center,
@@ -83,7 +76,6 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
 
-      // PageView
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) {
@@ -92,7 +84,6 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         children: [
-          // Página de lista de bares com título "Destaques"
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -113,8 +104,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemCount: bares.length,
                         itemBuilder: (context, index) {
                           final bar = bares[index];
-                          final lat = _parseCoordinate(bar['lat'], 'lat');
-                          final lng = _parseCoordinate(bar['long'], 'long');
+                          final lat = BarModel.parseCoordinate(bar['lat'], 'lat');
+                          final lng = BarModel.parseCoordinate(bar['long'], 'long');
 
                            return BarCard(
                               bar: bar,
@@ -128,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   });
                                 }
                               },
-                              getEndereco: getEndereco,
+                              getEndereco: BarModel.getEndereco,
                             );
                         },
                       ),
@@ -138,7 +129,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       
-      // Navigation icons
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         selectedItemColor: Colors.black,
@@ -146,7 +136,6 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         onTap: (index) {
           if (index == 1) {
-            // Abre o mapa como nova tela
             Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => MapBarScreen()),
             );
@@ -174,55 +163,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  // Função mais específica para coordenadas (corrigida)
-  double _parseCoordinate(dynamic value, String fieldName) {
-    if (value == null) {
-      print('Aviso: Campo $fieldName é null');
-      return 0.0;
-    }
-    
-    if (value is double) return value;
-    if (value is int) return value.toDouble();
-    
-    if (value is String) {
-      final cleanValue = value.trim();
-      if (cleanValue.isEmpty) {
-        print('Aviso: Campo $fieldName está vazio');
-        return 0.0;
-      }
-      final parsed = double.tryParse(cleanValue);
-      if (parsed == null) {
-        print('Erro: Não foi possível converter $fieldName: "$cleanValue" para double');
-      }
-      return parsed ?? 0.0;
-    }
-    
-    // Se é bool, trata especialmente
-    if (value is bool) {
-      print('Aviso: Campo $fieldName é boolean ($value). Convertendo para 0.0');
-      return 0.0; // ou você pode usar: value ? 1.0 : 0.0
-    }
-    
-    // Para outros tipos, tenta converter toString() e depois parse
-    try {
-      final stringValue = value.toString();
-      final parsed = double.tryParse(stringValue);
-      if (parsed == null) {
-        print('Erro: Campo $fieldName tem tipo inesperado: ${value.runtimeType}, valor: $value');
-      }
-      return parsed ?? 0.0;
-    } catch (e) {
-      print('Erro ao converter $fieldName para double: $value (tipo: ${value.runtimeType})');
-      return 0.0;
-    }
-  }
   
   void _buscarBares() async {
     try {
       final lista = await BarModel.buscarBares();
       if (mounted) {
-        // Limpa o PageStorage antes de atualizar os dados
         _clearPageStorage();
         
         setState(() {
@@ -238,45 +183,6 @@ class _HomeScreenState extends State<HomeScreen> {
           _expanded = [];
         });
       }
-    }
-  }
-
-  Future<String> getEndereco(double lat, double lng) async {
-    // Verifica se as coordenadas são válidas
-    if (lat == 0.0 && lng == 0.0) {
-      return "Coordenadas não informadas";
-    }
-    
-    print('Buscando endereço para: lat=$lat, lng=$lng');
-    try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
-      print('Placemarks retornados: $placemarks');
-      if (placemarks.isNotEmpty) {
-        final place = placemarks.first;
-        // Monta o endereço de forma mais robusta
-        List<String> enderecoParts = [];
-        
-        if (place.street != null && place.street!.isNotEmpty) {
-          enderecoParts.add(place.street!);
-        }
-        if (place.subThoroughfare != null && place.subThoroughfare!.isNotEmpty) {
-          enderecoParts.add(place.subThoroughfare!);
-        }
-        if (place.subLocality != null && place.subLocality!.isNotEmpty) {
-          enderecoParts.add(place.subLocality!);
-        }
-        if (place.locality != null && place.locality!.isNotEmpty) {
-          enderecoParts.add(place.locality!);
-        }
-        
-        return enderecoParts.isNotEmpty 
-            ? enderecoParts.join(', ') 
-            : "Endereço não encontrado";
-      }
-      return "Endereço não encontrado";
-    } catch (e) {
-      print('Erro ao buscar endereço: $e');
-      return "Erro ao buscar endereço";
     }
   }
 }
