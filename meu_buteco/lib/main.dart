@@ -59,6 +59,7 @@ class MainApp extends StatelessWidget {
         ),
         home: HomeScreen(),
         routes: {
+          '/home' : (context) => HomeScreen(),
           '/login': (context) => const LoginScreen(),
           '/signup': (context) => const CadastroUsuarioScreen(),
         },

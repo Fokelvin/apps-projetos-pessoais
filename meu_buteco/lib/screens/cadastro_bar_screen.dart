@@ -12,7 +12,8 @@ class _CadastroBarState extends State<CadastroBar> {
 
   final _formKey = GlobalKey<FormState>();
   final nomeController = TextEditingController();
-  final endercoController = TextEditingController();
+  final latitudeController = TextEditingController();
+  final longitudeController = TextEditingController();
   final linkController = TextEditingController();
 
   @override
@@ -22,7 +23,7 @@ class _CadastroBarState extends State<CadastroBar> {
         title: const Text("Cadastrar novo Bar"),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Form(
@@ -45,16 +46,25 @@ class _CadastroBarState extends State<CadastroBar> {
                 
                 //Campo 2
                 TextFormField(
-                  controller: endercoController,
+                  controller: latitudeController,
                   decoration: const InputDecoration(
-                    labelText: "Endereço do Bar"
+                    labelText: "Latitude"
                   ),
                   validator: (value) =>
-                    value == null || value.isEmpty ? "Informe o endereço" : null,
+                    value == null || value.isEmpty ? "Informe a latidude" : null,
                 ),
 
                 const SizedBox(height: 24),
+                TextFormField(
+                  controller: longitudeController,
+                  decoration: const InputDecoration(
+                    labelText: "Longitude"
+                  ),
+                  validator: (value) =>
+                    value == null || value.isEmpty ? "Informe a longitude" : null,
+                ),
 
+                  const SizedBox(height: 24),
                 //Campo3
                   TextFormField(
                   controller: linkController,
@@ -75,10 +85,10 @@ class _CadastroBarState extends State<CadastroBar> {
                   ),
                   onPressed: () async{
                     if(_formKey.currentState!.validate()){
-                      print('Botão pressionado');
                       final bar = BarModel(
                         nomeController.text, 
-                        endercoController.text, 
+                        latitudeController.text, 
+                        longitudeController.text,
                         linkController.text
                       );
                       print('Dados bar: $bar');
@@ -86,6 +96,7 @@ class _CadastroBarState extends State<CadastroBar> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("Novo bar salvo com sucesso")),
                       );
+                      Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
                     }
                   }, 
                   child: const Text("Salvar")

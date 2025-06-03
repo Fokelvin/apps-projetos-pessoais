@@ -5,6 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Flutter Android",
+            "request": "launch", 
+            "type": "dart",
+            "args": ["-d", "emulator-5554"]
+        },
+        {
             "name": "meu_buteco",
             "cwd": "meu_buteco",
             "request": "launch",
