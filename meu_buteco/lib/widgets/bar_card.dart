@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meu_buteco/screens/bar_screen.dart';
 import 'avaliacoes_widget.dart';
 
 class BarCard extends StatelessWidget {
@@ -7,7 +8,7 @@ class BarCard extends StatelessWidget {
   final double lng;
   final bool expanded;
   final ValueChanged<bool> onExpansionChanged;
-  final Future<String> Function(double, double) getEndereco;
+  final Future<String> Function(double, double) endereco;
 
   const BarCard({
     super.key,
@@ -16,11 +17,13 @@ class BarCard extends StatelessWidget {
     required this.lng,
     required this.expanded,
     required this.onExpansionChanged,
-    required this.getEndereco,
+    required this.endereco,
   });
 
   @override
   Widget build(BuildContext context) {
+
+    String? enderecoAtual;
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: ExpansionTile(
@@ -43,7 +46,7 @@ class BarCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 26,
-                backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                backgroundColor: Theme.of(context).colorScheme.primary.withAlpha(26),
                 backgroundImage: bar["linkImagem"] != null
                     ? NetworkImage(bar["linkImagem"])
                     : null,
@@ -57,7 +60,7 @@ class BarCard extends StatelessWidget {
         ),
         title: Text(bar['nome'] ?? 'Nome não informado'),
         subtitle: FutureBuilder<String>(
-          future: getEndereco(lat, lng),
+          future: endereco(lat, lng),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Text("Buscando endereço...");
@@ -65,7 +68,8 @@ class BarCard extends StatelessWidget {
             if (snapshot.hasError) {
               return const Text("Erro ao buscar endereço");
             }
-            return Text(snapshot.data ?? "Endereço não encontrado");
+            final enderecoAtual = snapshot.data ?? "Endereço não encontrado";
+            return Text(enderecoAtual);
           },
         ),
         onExpansionChanged: onExpansionChanged,
@@ -143,7 +147,14 @@ class BarCard extends StatelessWidget {
                           children: [
                             TextButton(
                               onPressed: () {
-                                // TODO: Implementar ver tudo
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => BarScreen(
+                                     bar: bar,
+                                     endereco: enderecoAtual ?? "Endereco nao encontrado",
+                                   ),
+                                  ),
+                                );
                               },
                               child: const Text(
                                 "Ver tudo",
@@ -155,7 +166,6 @@ class BarCard extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: () {
-                                // TODO: Implementar avaliar
                               },
                               child: const Text(
                                 "Avaliar",

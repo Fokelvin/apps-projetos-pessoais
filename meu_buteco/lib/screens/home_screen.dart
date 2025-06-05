@@ -119,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   });
                                 }
                               },
-                              getEndereco: BarModel.getEndereco,
+                              endereco: BarModel.getEndereco,
                             );
                         },
                       ),
@@ -128,7 +128,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         selectedItemColor: Colors.black,
