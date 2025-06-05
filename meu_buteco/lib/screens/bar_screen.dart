@@ -35,7 +35,7 @@ class BarScreen extends StatelessWidget {
                     Wrap(
                       alignment: WrapAlignment.start,
                       children: [
-                        const Icon(Icons.location_on, size: 16, color: Colors.red),
+                        const Icon(Icons.location_on, size: 20, color: Colors.red),
                         const SizedBox(width: 4),
                         ConstrainedBox(
                           constraints: BoxConstraints(
@@ -82,7 +82,7 @@ class BarScreen extends StatelessWidget {
                     const Divider(height: 16),
                     Row(
                       children: [
-                        const Icon(Icons.wc, size: 16, color: Colors.blue),
+                        const Icon(Icons.wc, size: 20, color: Colors.blue),
                         const SizedBox(width: 8),
                         const Expanded(child: Text("Banheiro")),
                         AvaliacoesWidget(rating: 4.0),
@@ -91,7 +91,7 @@ class BarScreen extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(Icons.local_bar, size: 16, color: Colors.orange),
+                        const Icon(Icons.local_bar, size: 20, color: Colors.orange),
                         const SizedBox(width: 8),
                         const Expanded(child: Text("Bebidas")),
                         AvaliacoesWidget(rating: 3.5),
@@ -100,7 +100,7 @@ class BarScreen extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(Icons.restaurant, size: 16),
+                        const Icon(Icons.restaurant, size: 20),
                         const SizedBox(width: 8),
                         const Expanded(child: Text("Comidas")),
                         AvaliacoesWidget(rating: 4.5),
@@ -109,7 +109,7 @@ class BarScreen extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(Icons.group, size: 16, color: Colors.purple),
+                        const Icon(Icons.group, size: 20, color: Colors.purple),
                         const SizedBox(width: 8),
                         const Expanded(child: Text("Atendimento")),
                         AvaliacoesWidget(rating: 5.0),
@@ -118,7 +118,7 @@ class BarScreen extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(Icons.currency_exchange, size: 16, color: Colors.amber),
+                        const Icon(Icons.currency_exchange, size: 20, color: Colors.amber),
                         const SizedBox(width: 8),
                         const Expanded(child: Text("Preços")),
                         AvaliacoesWidget(rating: 3.0),
@@ -130,7 +130,7 @@ class BarScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.music_note, size: 14),
+                        const Icon(Icons.music_note, size: 20),
                         const Text("Musica",
                           style: TextStyle(
                             fontSize: 16,
@@ -175,14 +175,14 @@ class BarScreen extends StatelessWidget {
                         ],
                       ), 
                     ),
-                    const SizedBox(height: 8),
-                    const Divider(height: 16),
+                    const SizedBox(height: 4),
+                    const Divider(height: 4),
                     Column(
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
-                            Icon(Icons.sports_soccer, size: 14),
+                            Icon(Icons.sports_soccer, size: 20),
                             SizedBox(width: 4),
                             const Text("Transmissão de jogos",
                               style: TextStyle(
@@ -201,7 +201,7 @@ class BarScreen extends StatelessWidget {
                                   mainAxisSize: MainAxisSize.min,
                                   children: const [
                                     Text("TV"),
-                                    Icon(Icons.check_box, size: 18),
+                                    Icon(Icons.check_box, size: 20),
                                   ],
                                 ),
                                 Row(
@@ -209,7 +209,7 @@ class BarScreen extends StatelessWidget {
                                   children: const [
                                     SizedBox(width: 8),
                                     Text("Telao"),
-                                    Icon(Icons.check_box_outline_blank, size: 18),
+                                    Icon(Icons.check_box_outline_blank, size: 20),
                                   ],
                                 ),
                               ],
@@ -218,8 +218,29 @@ class BarScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    const Divider(height: 16),
+                    const SizedBox(height: 4),
+                    const Divider(height: 4),
+                    Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.signal_wifi_statusbar_4_bar_rounded, size: 20),
+                            SizedBox(width: 4),
+                            const Text("WI-Fi",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            SizedBox(width: 4),
+                            Icon(Icons.check_box_outline_blank, size: 20),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    const Divider(height: 4),
                   ]
                 ),
               ),
