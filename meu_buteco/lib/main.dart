@@ -6,9 +6,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:meu_buteco/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:meu_buteco/models/user_model.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
-// ...existing imports...
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
@@ -73,6 +73,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform, // ou apenas Firebase.initializeApp();
   );
+  await dotenv.load(fileName: ".env");
+  print('API Key: ${dotenv.env['GOOGLE_PLACES_API_KEY']}'); // Debug
   runApp(MainApp());
 }
 

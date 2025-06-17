@@ -97,7 +97,7 @@ class AppDrawer extends StatelessWidget {
                       return Column(
                         children: [
                           // Mostrar opção de cadastrar bar apenas se estiver logado
-                          if (userProvider.isLoggedIn())
+                          if (userProvider.isLoggedIn() && userProvider.userEmail =="kelvindc@hotmail.com")
                             ListTile(
                               leading: const Icon(Icons.add_business),
                               title: const Text("Cadastrar Bar"),

@@ -52,3 +52,6 @@ app.*.map.json
 
 # Android Manifest
 android/app/src/main/AndroidManifest.xml
+
+# env
+.env

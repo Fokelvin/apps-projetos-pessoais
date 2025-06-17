@@ -20,7 +20,8 @@ class UserProvider extends ChangeNotifier {
   UserProvider() {
     _loadCurrentUser();
   }
-
+  String get userId => firebaseUser?.uid ?? "";
+  
   void signUp({
     required Map<String, dynamic> userData,
     required String pass,

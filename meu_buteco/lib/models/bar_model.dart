@@ -6,25 +6,50 @@ class BarModel {
   final String latitude;
   final String longitude;
   final String linkImagem;
+  final Map<String, bool> musica;
+  final Map<String, bool> transmissao;
+  final bool wifi;
+  final Map<String, String> horario;
+  final String endereco;
   
-  BarModel(this.nome, this.latitude, this.longitude, this.linkImagem);
+  BarModel({
+    required this.nome,
+    required this.latitude,
+    required this.longitude,
+    required this.linkImagem,
+    required this.musica,
+    required this.transmissao,
+    required this.wifi,
+    required this.horario,
+    required this.endereco
+  });
 
-  Map<String, dynamic> toMap(){
+  Map<String, dynamic> toMap() {
     return {
-      "nome" : nome, 
-      "lat" : latitude,
+      "nome": nome,
+      "lat": latitude,
       "long": longitude,
-      "linkImagem": linkImagem
+      "linkImagem": linkImagem,
+      "musica": musica,
+      "transmissao": transmissao,
+      "wifi": wifi,
+      "horario": horario,
+      "endereco" : endereco
     };
   }
 
-  Future<void> salvarNoFirebase() async{
-    await FirebaseFirestore.instance.collection("bares").add(toMap());
+  Future<String> salvarNoFirebase() async {
+    final docRef = await FirebaseFirestore.instance.collection("bares").add(toMap());
+    return docRef.id;
   }
 
   static Future<List<Map<String, dynamic>>> buscarBares() async {
     final snapshot = await FirebaseFirestore.instance.collection('bares').get();
-    return snapshot.docs.map((doc) => doc.data()).toList();
+    return snapshot.docs.map((doc) {
+      final data = doc.data();
+      data['id'] = doc.id;
+      return data;
+    }).toList();
   }
 
   // Método para parse de coordenadas
@@ -77,7 +102,7 @@ class BarModel {
     print('Buscando endereço para: lat=$lat, lng=$lng');
     try {
       List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
-      print('Placemarks retornados: $placemarks');
+      //print('Placemarks retornados: $placemarks');
       if (placemarks.isNotEmpty) {
         final place = placemarks.first;
         List<String> enderecoParts = [];
