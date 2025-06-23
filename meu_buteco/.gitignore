@@ -30,7 +30,8 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-!/build/web/
+!build/web/
+!build/web/**
 
 # Firebase related
 .firebase/
@@ -56,6 +57,3 @@ android/app/src/main/AndroidManifest.xml
 
 # env
 .env
-
-#excession
-!meu_buteco/build/web
