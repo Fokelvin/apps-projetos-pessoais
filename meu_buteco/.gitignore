@@ -56,3 +56,6 @@ android/app/src/main/AndroidManifest.xml
 
 # env
 .env
+
+#excession
+!meu_buteco/build/web
