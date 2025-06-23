@@ -28,8 +28,8 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-build/
-!/build/web/
+build/*
+!build/web/
 
 # Firebase related
 .firebase/
