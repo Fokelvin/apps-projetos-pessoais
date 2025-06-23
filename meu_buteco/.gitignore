@@ -5,8 +5,6 @@
 *.swp
 .DS_Store
 .atom/
-.build/
-!.build/web/
 .buildlog/
 .history
 .svn/
@@ -30,9 +28,8 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
-!build/web/
-!build/web/**
+build/
+!/build/web/
 
 # Firebase related
 .firebase/
