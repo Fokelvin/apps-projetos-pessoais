@@ -1,0 +1,32 @@
+name: meu_buteco
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.7.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: ^3.13.1
+  cloud_firestore: ^5.6.7
+  scoped_model: ^2.0.0
+  firebase_auth: ^5.5.3
+  provider: ^6.1.5
+  geocoding: ^4.0.0
+  google_maps_flutter: ^2.12.2
+  webview_flutter: ^4.13.0
+  geolocator: ^14.0.1
+  logger: ^2.5.0
+  google_places_flutter: ^2.1.0
+  flutter_dotenv: ^5.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets: [".env"]  # Corrigido aqui - usando colchetes
