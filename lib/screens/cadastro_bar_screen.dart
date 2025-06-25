@@ -40,7 +40,6 @@ class _CadastroBarState extends State<CadastroBar> {
   @override
   void initState() {
     super.initState();
-    print('API Key no CadastroBar: ${dotenv.env['GOOGLE_PLACES_API_KEY']}'); // Debug
   }
 
   @override
