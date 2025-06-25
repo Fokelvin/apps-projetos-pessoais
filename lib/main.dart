@@ -74,7 +74,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform, // ou apenas Firebase.initializeApp();
   );
   await dotenv.load(fileName: ".env");
-  print('API Key: ${dotenv.env['GOOGLE_PLACES_API_KEY']}'); // Debug
   runApp(MainApp());
 }
 

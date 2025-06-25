@@ -28025,7 +28025,7 @@ s=2
 return A.A(A.a93(A.aVf()),$async$a1S)
 case 2:s=3
 return A.A($.a2e().CQ(".env"),$async$a1S)
-case 3:A.dV("API Key: "+A.m($.a2e().gKN().h(0,"GOOGLE_PLACES_API_KEY")))
+case 3:A.dV("API Key: "+A.m($.a2e().gKN().h(0,"api")))
 if($.ab==null)A.aFU()
 q=$.ab
 q.toString
@@ -96495,7 +96495,7 @@ al(){var s=$.aA()
 return new A.UE(new A.bJ(null,t.am),new A.ff(B.bi,s),new A.ff(B.bi,s),new A.ff(B.bi,s),new A.ff(B.bi,s),new A.ff(B.bi,s),new A.ff(B.bi,s))}}
 A.UE.prototype={
 au(){this.aS()
-A.dV("API Key no CadastroBar: "+A.m($.a2e().gKN().h(0,"GOOGLE_PLACES_API_KEY")))},
+A.dV("API Key no CadastroBar: "+A.m($.a2e().gKN().h(0,"api")))},
 N(a){var s,r,q,p=this,o=null,n=A.uy(o,A.Z(a).ax.b,o,o,B.aw1),m=A.Z(a),l=A.kZ(p.e,B.OQ,o,o,!1,o,o,o,o,new A.asN()),k=$.a2e().gKN().h(0,"GOOGLE_PLACES_API_KEY")
 if(k==null)k=""
 s=A.c(["br"],t.s)
