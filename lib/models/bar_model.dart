@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoding/geocoding.dart';
 
@@ -55,7 +57,6 @@ class BarModel {
   // Método para parse de coordenadas
   static double parseCoordinate(dynamic value, String fieldName) {
     if (value == null) {
-      print('Aviso: Campo $fieldName é null');
       return 0.0;
     }
     
@@ -65,12 +66,11 @@ class BarModel {
     if (value is String) {
       final cleanValue = value.trim();
       if (cleanValue.isEmpty) {
-        print('Aviso: Campo $fieldName está vazio');
         return 0.0;
       }
       final parsed = double.tryParse(cleanValue);
       if (parsed == null) {
-        print('Erro: Não foi possível converter $fieldName: "$cleanValue" para double');
+        //print('Erro: Não foi possível converter $fieldName: "$cleanValue" para double');
       }
       return parsed ?? 0.0;
     }

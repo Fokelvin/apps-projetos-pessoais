@@ -14,7 +14,7 @@ class LoginScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Login'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -64,6 +64,34 @@ class LoginScreen extends StatelessWidget {
                 Navigator.of(context).pushNamed('/signup');
               },
               child: Text('Não tem cadastro? Criar conta'),
+            ),
+            TextButton(
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.purple[900], // texto preto
+                ),
+              onPressed: () {
+                final email = emailController.text.trim();
+                if(email.isEmpty){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Informe seu e-mail para recuperar a senha"))
+                  );
+                  return;
+                }
+                Provider.of<UserProvider>(context, listen: false).recoverPass(
+                  email: email, 
+                  onSuccess: (){
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("E-mail de recuperação enviado"))
+                    );
+                  },
+                  onFail: (erro){
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Erro para enviar e-mail de recuperação enviado"))
+                    );
+                  }
+                );
+              },
+              child: Text('Esqueci minha senha'),
             ),
           ],
         ),

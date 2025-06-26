@@ -1,8 +1,11 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:meu_buteco/models/bar_model.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/foundation.dart'; // para usar kIsWeb
 
 class CadastroBar extends StatefulWidget {
   const CadastroBar({super.key});
@@ -36,6 +39,9 @@ class _CadastroBarState extends State<CadastroBar> {
   // Variáveis para armazenar as coordenadas
   double? latitude;
   double? longitude;
+  final googleApiKey = kIsWeb
+    ? dotenv.env['GOOGLE_PLACES_API_KEY_WEB']
+    : dotenv.env['GOOGLE_PLACES_API_KEY_MOBILE'];
 
   @override
   void initState() {
@@ -83,7 +89,7 @@ class _CadastroBarState extends State<CadastroBar> {
                 // Campo de busca de endereço
                 GooglePlaceAutoCompleteTextField(
                   textEditingController: enderecoController,
-                  googleAPIKey: dotenv.env['GOOGLE_PLACES_API_KEY'] ?? '',
+                  googleAPIKey: googleApiKey ?? '',
                   inputDecoration: const InputDecoration(
                     labelText: "Endereço",
                     border: OutlineInputBorder(),
@@ -344,14 +350,14 @@ class _CadastroBarState extends State<CadastroBar> {
                             },
                           );
                           await barModel.salvarNoFirebase();
-                          if (!mounted) return;
+                          if (!context.mounted) return;
                           
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Bar cadastrado com sucesso!")),
                           );
                           Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
                         } catch (e) {
-                          if (!mounted) return;
+                          if (!context.mounted) return;
                           
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Erro ao cadastrar bar: $e")),

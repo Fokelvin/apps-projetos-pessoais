@@ -7,6 +7,7 @@ import 'package:meu_buteco/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:meu_buteco/models/user_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'screens/user_profile_screen.dart';
 
 
 
@@ -62,6 +63,7 @@ class MainApp extends StatelessWidget {
           '/home' : (context) => HomeScreen(),
           '/login': (context) => const LoginScreen(),
           '/signup': (context) => const CadastroUsuarioScreen(),
+          '/userProfile': (context) => const UserProfileScreen(),
         },
       ),
     );

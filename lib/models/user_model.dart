@@ -99,9 +99,18 @@ class UserProvider extends ChangeNotifier {
     });
   }
 
-  void recoverPass(String email) {
-    _auth.sendPasswordResetEmail(email: email);
+Future<void> recoverPass({
+  required String email,
+  required VoidCallback onSuccess,
+  required Function(String) onFail,
+}) async {
+  try {
+    await _auth.sendPasswordResetEmail(email: email);
+    onSuccess();
+  } catch (e) {
+    onFail(e.toString());
   }
+}
 
   // Método isLogged estava vazio, removido para evitar confusão
   // Se precisar, pode implementar uma lógica específica aqui

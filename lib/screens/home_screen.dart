@@ -3,9 +3,10 @@ import 'package:meu_buteco/screens/mapa_scren.dart';
 import '../drawer/drawer.dart';
 import '../models/bar_model.dart';
 import '../widgets/bar_card.dart';
+import 'package:logger/logger.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -13,7 +14,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
 
   List<Map<String, dynamic>> bares = [];
   List<bool> _expanded = [];
@@ -34,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
         pageStorage.writeState(context, null);
       }
     } catch (e) {
-      print('Erro ao limpar PageStorage: $e');
+      //print('Erro ao limpar PageStorage: $e');
     }
   }
 
@@ -90,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const Padding(
                 padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
                 child: Text(
-                  'Destaques',
+                  'Lista de butecos',
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -175,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     } catch (e) {
-      print('Erro ao buscar bares: $e');
+      Logger().e('Erro ao buscar bares: $e');
       if (mounted) {
         setState(() {
           bares = [];

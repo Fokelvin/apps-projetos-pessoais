@@ -50,6 +50,7 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
                     if(text!.isEmpty ) {
                       return "Insira nome valido";
                     }
+                    return null;
                   },
                   decoration: InputDecoration(
                     hintText: "Nome completo",
@@ -68,6 +69,7 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
                     if (text == null || text.isEmpty || !emailRegex.hasMatch(text)) {
                       return "Insira um e-mail válido";
                     }
+                    return null;
                   },
                   decoration: InputDecoration(
                     hintText: "E-mail",
@@ -84,6 +86,7 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
                     if(text!.isEmpty) {
                       return "Insira um endereço valido";
                     }
+                    return null;
                   },
                   decoration: InputDecoration(
                     hintText: "Endereço",
@@ -198,7 +201,6 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
 
   // Função chamada em caso de falha no cadastro
   void _onFail(String errorMessage) {
-    print('Erro ao criar usuário: $errorMessage');
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Falha ao criar usuário!: "))
     );

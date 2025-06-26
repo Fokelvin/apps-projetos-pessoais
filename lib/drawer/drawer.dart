@@ -146,7 +146,7 @@ class AppDrawer extends StatelessWidget {
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               onTap: () {
-                                // Navigator.of(context).pushNamed('/profile');
+                                Navigator.of(context).pushNamed('/userProfile');
                               },
                             ),
                         ],

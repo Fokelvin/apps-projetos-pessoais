@@ -1,7 +1,8 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:meu_buteco/models/bar_model.dart';
-import 'package:geolocator/geolocator.dart';
 
 class MapBarScreen extends StatefulWidget {
 
@@ -126,7 +127,6 @@ class _MapBarScreenState extends State<MapBarScreen> {
         _isLoading = false;
       });
     } catch (e) {
-      print('Erro ao carregar bares: $e');
       if (!mounted) return;
       setState(() {
         _markers = {};
@@ -161,7 +161,7 @@ class _MapBarScreenState extends State<MapBarScreen> {
               try {
                 _mapController = controller;
               } catch (e) {
-                print('Erro ao criar mapa: $e');
+                //print('Erro ao criar mapa: $e');
               }
             },
             myLocationEnabled: true,
