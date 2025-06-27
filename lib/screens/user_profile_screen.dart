@@ -56,7 +56,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       _isEditing = false;
     });
   }
-
+//Diasfoke1304#
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,24 +67,72 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           Consumer<UserProvider>(
             builder: (context, userProvider, child) {
               if (!_isEditing) {
-                return IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: _toggleEdit,
-                  tooltip: 'Editar perfil',
+                return Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(24),
+                    onTap: _toggleEdit,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.edit, size: 20.0,),
+                          SizedBox(height: 2),
+                          Text(
+                            'Editar perfil',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 );
               } else {
                 return Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.save),
-                      onPressed: _saveChanges,
-                      tooltip: 'Salvar alterações',
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(24),
+                        onTap: _saveChanges,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.save, size: 20.0),
+                              SizedBox(height: 2),
+                              Text(
+                                'Salvar',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.cancel),
-                      onPressed: _cancelEdit,
-                      tooltip: 'Cancelar edição',
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(24),
+                        onTap: _cancelEdit,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.cancel, size: 20.0),
+                              SizedBox(height: 2),
+                              Text(
+                                'Cancelar',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 );
@@ -201,21 +249,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-
-                  // Botão de alterar senha
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      onPressed: () {
-                        
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Funcionalidade em desenvolvimento')),
-                        );
-                      },
-                      icon: const Icon(Icons.lock),
-                      label: const Text('Alterar Senha'),
-                    ),
-                  ),
 
                   // Informações adicionais
                   if (userProvider.isMaster) ...[

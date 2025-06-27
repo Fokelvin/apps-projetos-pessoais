@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class AvaliacoesWidget extends StatelessWidget {
+class RatingsWidget extends StatelessWidget {
   final double rating;
   final double size;
   final Color color;
 
-  const AvaliacoesWidget({
+  const RatingsWidget({
     super.key,
     required this.rating,
     this.size = 16,

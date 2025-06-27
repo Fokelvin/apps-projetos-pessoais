@@ -1,4 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:logger/logger.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/user_model.dart';
 
 class AvaliacaoModel {
   
@@ -10,6 +14,8 @@ class AvaliacaoModel {
   final double ratingAtendimento;
   final double ratingPrecos;
   final DateTime dataAvaliacao;
+
+  static final Logger _logger = Logger();
 
   AvaliacaoModel({
     required this.userId,
@@ -45,7 +51,7 @@ class AvaliacaoModel {
         dataAvaliacao: (data['dataAvaliacao'] as Timestamp).toDate(),
       );
     } catch (e) {
-      //_logger.i.i('Erro ao buscar avaliação existente: $e');
+      _logger.i(e);
       return null;
     }
   }
@@ -86,7 +92,7 @@ class AvaliacaoModel {
         .set(avaliacao.toMap());
 
     } catch (e) {
-      //_logger.i.i('Erro ao salvar avaliação: $e');
+      _logger.i(e);
       rethrow;
     }
   }
@@ -128,7 +134,7 @@ class AvaliacaoModel {
         .update(avaliacao.toMap());
 
     } catch (e) {
-      //_logger.i.i('Erro ao atualizar avaliação: $e');
+      _logger.i(e);
       rethrow;
     }
   }
@@ -148,6 +154,7 @@ class AvaliacaoModel {
   }
 
   static Future<Map<String, dynamic>> processarAvaliacao({
+    required BuildContext context,
     required String userId,
     required String barId,
     required double ratingBanheiro,
@@ -157,6 +164,17 @@ class AvaliacaoModel {
     required double ratingPrecos,
   }) async {
     try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      if (!userProvider.isLoggedIn()) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Você precisa estar logado para avaliar!')),
+        );
+        return {
+          'success': false,
+          'message': 'Você precisa estar logado para avaliar',
+        };
+      }
+
       if (!validarAvaliacao(
         ratingBanheiro: ratingBanheiro,
         ratingBebidas: ratingBebidas,
@@ -204,6 +222,7 @@ class AvaliacaoModel {
         };
       }
     } catch (e) {
+      _logger.i(e);
       return {
         'success': false,
         'message': 'Erro ao processar avaliação: $e',
@@ -241,7 +260,7 @@ static Future<Map<String, dynamic>> carregarAvaliacaoExistente(String userId, St
       }
     };
   } catch (e) {
-    //_logger.i.i('Erro ao carregar avaliação existente: $e');
+    _logger.i(e);
     return {
       'success': false,
       'message': 'Erro ao carregar avaliação existente: $e',
@@ -333,7 +352,7 @@ static Future<Map<String, dynamic>> calcularMediaAvaliacoes(String barId) async 
       'totalAvaliacoes': totalAvaliacoes,
     };
   } catch (e) {
-    //_logger.i.f('Erro ao calcular médias: $e');
+    _logger.i(e);
     return {
       'success': false,
       'message': 'Erro ao calcular médias: $e',

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meu_buteco/screens/mapa_scren.dart';
+import 'package:meu_buteco/screens/map_scren.dart';
 import '../drawer/drawer.dart';
 import '../models/bar_model.dart';
 import '../widgets/bar_card.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meu_buteco/firebase_options.dart';
-import 'package:meu_buteco/screens/cadastro_usuario_screen.dart';
+import 'package:meu_buteco/screens/register_user.dart';
 import 'package:meu_buteco/screens/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meu_buteco/screens/login_screen.dart';
@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:meu_buteco/models/user_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'screens/user_profile_screen.dart';
+import 'screens/search_screen.dart';
 
 
 
@@ -32,7 +33,7 @@ class MainApp extends StatelessWidget {
             error: Colors.red,
             onError: Colors.white,
           ),
-            inputDecorationTheme: InputDecorationTheme(
+          inputDecorationTheme: InputDecorationTheme(
             labelStyle: TextStyle(color: Colors.black), // label quando não focado
             floatingLabelStyle: TextStyle(color: Colors.purple[900]),
             filled: true, // ativa o preenchimento
@@ -57,6 +58,16 @@ class MainApp extends StatelessWidget {
             bodyMedium: TextStyle(color: Colors.black),
             bodySmall: TextStyle(color: Colors.black),
           ),
+          tooltipTheme: TooltipThemeData(
+            textStyle: TextStyle(
+              color: Colors.black, // Texto preto no tooltip
+            ),
+          //Você pode customizar o fundo também, se quiser:
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          ),
         ),
         home: HomeScreen(),
         routes: {
@@ -64,6 +75,7 @@ class MainApp extends StatelessWidget {
           '/login': (context) => const LoginScreen(),
           '/signup': (context) => const CadastroUsuarioScreen(),
           '/userProfile': (context) => const UserProfileScreen(),
+          '/search_bar' :(context) => const SearchScreen(),
         },
       ),
     );

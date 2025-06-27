@@ -3,21 +3,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/user_model.dart';
-import '../models/avaliacao_model.dart';
+import '../models/rating_model.dart';
 
-class AvaliacoesScreen extends StatefulWidget {
+class RatingScreen extends StatefulWidget {
   final String barId;
 
-  const AvaliacoesScreen({
+  const RatingScreen({
     super.key,
     required this.barId,
   });
 
   @override
-  State<AvaliacoesScreen> createState() => _AvaliacoesScreenState();
+  State<RatingScreen> createState() => _RatingScreenState();
 }
 
-class _AvaliacoesScreenState extends State<AvaliacoesScreen> {
+class _RatingScreenState extends State<RatingScreen> {
   double _ratingBanheiro = 0;
   double _ratingBebidas = 0;
   double _ratingComidas = 0;
@@ -65,6 +65,7 @@ class _AvaliacoesScreenState extends State<AvaliacoesScreen> {
   try {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final resultado = await AvaliacaoModel.processarAvaliacao(
+      context: context,
       userId: userProvider.userId,
       barId: widget.barId,
       ratingBanheiro: _ratingBanheiro,

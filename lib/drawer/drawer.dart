@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meu_buteco/screens/cadastro_bar_screen.dart';
+import 'package:meu_buteco/screens/register_bar_screen.dart';
 import 'package:provider/provider.dart';
 import '../models/user_model.dart';
 
@@ -131,11 +131,11 @@ class AppDrawer extends StatelessWidget {
                           ListTile(
                             leading: const Icon(Icons.search),
                             title: Text(
-                              "Buscar Bares",
+                              "Buscar Butecos",
                               style: Theme.of(context).textTheme.bodyLarge,
                             ),
                             onTap: () {
-                              // Navigator.of(context).pushNamed('/search');
+                              Navigator.of(context).pushNamed('/search_bar');
                             },
                           ),
                           if (userProvider.isLoggedIn())

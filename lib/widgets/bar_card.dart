@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:meu_buteco/screens/bar_screen.dart';
-import 'package:meu_buteco/screens/mapa_scren.dart';
-import 'avaliacoes_widget.dart';
-import '../screens/avaliacao_screen.dart';
-import '../models/avaliacao_model.dart';
+import 'package:meu_buteco/screens/map_scren.dart';
+import 'ratings_widget.dart';
+import '../screens/rating_screen.dart';
+import '../models/rating_model.dart';
+import 'package:provider/provider.dart';
+import '../models/user_model.dart';
 
 class BarCard extends StatefulWidget {
   final Map<String, dynamic> bar;
@@ -130,8 +132,14 @@ class _BarCardState extends State<BarCard> {
                           'totalAvaliacoes': 0,
                         };
 
-                        final medias = data['medias'] as Map<String, dynamic>;
-                        final totalAvaliacoes = data['totalAvaliacoes'] as int;
+                        final medias = (data['medias'] ?? {
+                          'banheiro': 0.0,
+                          'bebidas': 0.0,
+                          'comidas': 0.0,
+                          'atendimento': 0.0,
+                          'precos': 0.0,
+                        }) as Map<String, dynamic>;
+                        final totalAvaliacoes = (data['totalAvaliacoes'] is int) ? data['totalAvaliacoes'] as int : 0;
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,7 +182,7 @@ class _BarCardState extends State<BarCard> {
                                 const Icon(Icons.wc, size: 16, color: Colors.blue),
                                 const SizedBox(width: 8),
                                 const Expanded(child: Text("Banheiro")),
-                                AvaliacoesWidget(rating: medias['banheiro']),
+                                RatingsWidget(rating: medias['banheiro']),
                               ],
                             ),
                             const SizedBox(height: 8),
@@ -183,7 +191,7 @@ class _BarCardState extends State<BarCard> {
                                 const Icon(Icons.local_bar, size: 16, color: Colors.orange),
                                 const SizedBox(width: 8),
                                 const Expanded(child: Text("Bebidas")),
-                                AvaliacoesWidget(rating: medias['bebidas']),
+                                RatingsWidget(rating: medias['bebidas']),
                               ],
                             ),
                             const SizedBox(height: 8),
@@ -192,7 +200,7 @@ class _BarCardState extends State<BarCard> {
                                 const Icon(Icons.restaurant, size: 16, color: Colors.green),
                                 const SizedBox(width: 8),
                                 const Expanded(child: Text("Comidas")),
-                                AvaliacoesWidget(rating: medias['comidas']),
+                                RatingsWidget(rating: medias['comidas']),
                               ],
                             ),
                             const SizedBox(height: 8),
@@ -201,7 +209,7 @@ class _BarCardState extends State<BarCard> {
                                 const Icon(Icons.group, size: 16, color: Colors.purple),
                                 const SizedBox(width: 8),
                                 const Expanded(child: Text("Atendimento")),
-                                AvaliacoesWidget(rating: medias['atendimento']),
+                                RatingsWidget(rating: medias['atendimento']),
                               ],
                             ),
                             const SizedBox(height: 8),
@@ -210,7 +218,7 @@ class _BarCardState extends State<BarCard> {
                                 const Icon(Icons.currency_exchange, size: 16, color: Colors.amber),
                                 const SizedBox(width: 8),
                                 const Expanded(child: Text("Preços")),
-                                AvaliacoesWidget(rating: medias['precos']),
+                                RatingsWidget(rating: medias['precos']),
                               ],
                             ),
                           ],
@@ -242,10 +250,18 @@ class _BarCardState extends State<BarCard> {
                         ),
                         TextButton(
                           onPressed: () async {
+                            final userProvider = Provider.of<UserProvider>(context, listen: false);
+                            if(!userProvider.isLoggedIn()){
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Voce precisa estar logado para avaliar')),
+                              );
+                              Navigator.of(context).pushNamed('/login');
+                              return;
+                            }
                             await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => AvaliacoesScreen(
+                                builder: (context) => RatingScreen(
                                   barId: widget.bar['id'] ?? '',
                                 ),
                               ),

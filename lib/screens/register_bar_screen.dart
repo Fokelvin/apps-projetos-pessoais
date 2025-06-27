@@ -148,7 +148,7 @@ class _CadastroBarState extends State<CadastroBar> {
                   ),
                   validator: (value){
                     if(value == null || value.isEmpty){
-                      linkController.text = "https://placehold.co/600x400/000000/FFFFFF/png";
+                      linkController.text = "https://rzhnjeisknsdgaogvxfg.supabase.co/storage/v1/object/public/imagens//logo.jpeg";
                     }
                     return null;
                   },

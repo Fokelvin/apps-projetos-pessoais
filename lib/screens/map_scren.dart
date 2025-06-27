@@ -9,8 +9,9 @@ class MapBarScreen extends StatefulWidget {
   final double? lat;
   final double? long;
   final String? barName;
+  final String? selectedBarId; // ou use o nome, se preferir
   
-  const MapBarScreen({super.key, this.lat, this.long, this.barName});
+  const MapBarScreen({super.key, this.lat, this.long, this.barName, this.selectedBarId});
 
   @override
   State<MapBarScreen> createState() => _MapBarScreenState();
@@ -22,13 +23,14 @@ class _MapBarScreenState extends State<MapBarScreen> {
   bool _showBarCard = false;
   CameraPosition _cameraPosition = const CameraPosition(
     target: LatLng(-19.924648889180805, -43.93786504763702),
-    zoom: 13,
+    zoom: 18,
   );
 
   GoogleMapController? _mapController;
   LatLng? _closestBar;
   String? _closestBarName;
   bool _isLoading = true;
+  String? _selectedBarId;
 
   @override
   void initState() {
@@ -36,7 +38,7 @@ class _MapBarScreenState extends State<MapBarScreen> {
     if(widget.lat != null && widget.long != null){
       _cameraPosition = CameraPosition(
         target: LatLng(widget.lat!, widget.long!),
-        zoom: 15
+        zoom: 18
       );
       _closestBar = LatLng(widget.lat!, widget.long!);
       _closestBarName = widget.barName;
@@ -86,6 +88,11 @@ class _MapBarScreenState extends State<MapBarScreen> {
           // Selecionar automaticamente
           _selectedBar = barSelecionado;
           _showBarCard = true;
+          _selectedBarId = barSelecionado['id'];
+          setState(() {
+            _selectedBar = barSelecionado;
+            _showBarCard = true;
+          });
         } else {
           // Se não foi passado bar específico, mostrar o primeiro da lista
           final primeiroBar = lista.first;
@@ -104,6 +111,9 @@ class _MapBarScreenState extends State<MapBarScreen> {
           return Marker(
             markerId: MarkerId(bar['nome']),
             position: LatLng(lat, lng),
+            icon: _selectedBarId == bar['id']
+              ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure) // cor diferente
+              : BitmapDescriptor.defaultMarker,
             infoWindow: InfoWindow(
               title: bar['nome'],
               snippet: bar['endereco'] ?? 'Endereço não informado',
@@ -112,6 +122,7 @@ class _MapBarScreenState extends State<MapBarScreen> {
                 setState(() {
                   _selectedBar = bar;
                   _showBarCard = true;
+                  _selectedBarId = bar['id'];
                 });
               },
             ),
@@ -180,36 +191,7 @@ class _MapBarScreenState extends State<MapBarScreen> {
             ),
           
           // Card informativo sobre o bar
-          if (!_isLoading && _closestBarName != null)
-            Positioned(
-              top: 10,
-              left: 10,
-              right: 10,
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.location_on,
-                        color: Colors.green,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          widget.lat != null && widget.long != null
-                              ? 'Bar selecionado: $_closestBarName'
-                              : 'Bar destacado: $_closestBarName',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+          
           if (_showBarCard && _selectedBar != null)
             Positioned(
               bottom: 20,

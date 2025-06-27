@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:meu_buteco/screens/mapa_scren.dart';
-import 'package:meu_buteco/widgets/avaliacoes_widget.dart';
+import 'package:meu_buteco/screens/map_scren.dart';
+import 'package:meu_buteco/widgets/ratings_widget.dart';
 
 class BarScreen extends StatelessWidget {
 
@@ -84,7 +84,7 @@ class BarScreen extends StatelessWidget {
                       const Icon(Icons.wc, size: 20, color: Colors.blue),
                       const SizedBox(width: 8),
                       const Expanded(child: Text("Banheiro")),
-                      AvaliacoesWidget(rating: 4.0),
+                      RatingsWidget(rating: 4.0),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -93,7 +93,7 @@ class BarScreen extends StatelessWidget {
                       const Icon(Icons.local_bar, size: 20, color: Colors.orange),
                       const SizedBox(width: 8),
                       const Expanded(child: Text("Bebidas")),
-                      AvaliacoesWidget(rating: 3.5),
+                      RatingsWidget(rating: 3.5),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -102,7 +102,7 @@ class BarScreen extends StatelessWidget {
                       const Icon(Icons.restaurant, size: 20),
                       const SizedBox(width: 8),
                       const Expanded(child: Text("Comidas")),
-                      AvaliacoesWidget(rating: 4.5),
+                      RatingsWidget(rating: 4.5),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -111,7 +111,7 @@ class BarScreen extends StatelessWidget {
                       const Icon(Icons.group, size: 20, color: Colors.purple),
                       const SizedBox(width: 8),
                       const Expanded(child: Text("Atendimento")),
-                      AvaliacoesWidget(rating: 5.0),
+                      RatingsWidget(rating: 5.0),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -120,7 +120,7 @@ class BarScreen extends StatelessWidget {
                       const Icon(Icons.currency_exchange, size: 20, color: Colors.amber),
                       const SizedBox(width: 8),
                       const Expanded(child: Text("Preços")),
-                      AvaliacoesWidget(rating: 3.0),
+                      RatingsWidget(rating: 3.0),
                     ],
                   ),
                   //Musica

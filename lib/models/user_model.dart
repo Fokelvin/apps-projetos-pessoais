@@ -160,6 +160,19 @@ Future<void> recoverPass({
     return userData["isMaster"] ?? false;
   }
 
+  Future<void> atualizarPerfil({
+    required String nome,
+    required String endereco,
+    required String telefone,
+  }) async {
+  // Aqui você pode fazer a chamada para o backend, Firebase, etc.
+  // Exemplo simples:
+  userData['name'] = nome;
+  userData['endereco'] = endereco;
+  userData['telefone'] = telefone;
+  notifyListeners();
+}
+
   // Getters úteis para acessar dados do usuário
   String get userName => userData["name"] ?? "";
   String get userEmail => userData["email"] ?? "";
