@@ -45,9 +45,65 @@ class LoginScreen extends StatelessWidget {
                     );
                     Navigator.of(context).pop();
                   }, 
-                  onFail: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Falha ao fazer login!')),
+                  onFail: (erro) async {
+                    await showDialog(
+                      context: context, 
+                      builder: (build) => AlertDialog(
+                        title: Text('Falha ao fazer login'),
+                        content: Text(erro),
+                        actions: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: Text('OK',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  //Reenvia o email de verificação
+                                  final user = Provider.of<UserProvider>(context, listen: false).firebaseUser;
+                                  if(user != null && !user.emailVerified){
+                                    await user.sendEmailVerification();
+                                        // Adicione esta verificação
+                                    if (!context.mounted) return;
+
+                                    Navigator.of(context).pop();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Email de confirmado reenviado'),
+                                        duration: Duration(seconds: 5),
+                                      ),
+                                    );
+                                  } else{
+                                    Navigator.of(context).pop();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Não foi possível reenviar. Tente novamente após tentar login.',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        duration: Duration(seconds: 5),
+                                      ),
+                                    );
+                                  }
+                                }, 
+                                child: Text('Não recebeu? Reenviar email de confirmação',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                  ),
+                                )
+                              ),
+                            ],
+                          )
+
+                        ],
+                      )
                     );
                   },
                 );

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Importa o Provider
 import 'package:meu_buteco/models/user_model.dart'; // Importa seu UserProvider
 
-class CadastroUsuarioScreen extends StatefulWidget {
-  const CadastroUsuarioScreen({super.key});
+class RegisterUserScreen extends StatefulWidget {
+  const RegisterUserScreen({super.key});
 
   @override
-  State<CadastroUsuarioScreen> createState() => _CadastroUsuarioScreenState();
+  State<RegisterUserScreen> createState() => _RegisterUserScreenState();
 }
 
-class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
+class _RegisterUserScreenState extends State<RegisterUserScreen> {
 
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -194,7 +194,11 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
 
     void _onSuccess() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Usuário criado com sucesso!"))
+      const SnackBar(
+        content: Text("Verifique seu endereço de e-mail para logar"),
+        duration: Duration(seconds: 5),
+      )
+      
     );
     Navigator.of(context).pop();
   }

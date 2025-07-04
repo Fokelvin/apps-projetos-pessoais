@@ -55,3 +55,6 @@ android/app/src/main/AndroidManifest.xml
 
 # env
 .env
+
+#key
+android/key.properties

@@ -283,8 +283,6 @@ class _CadastroBarState extends State<CadastroBar> {
                     labelText: "Segunda a Sexta (ex: 10:00 às 24:00)",
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) =>
-                    value == null || value.isEmpty ? "Informe o horário" : null,
                 ),
 
                 const SizedBox(height: 16),
@@ -295,8 +293,6 @@ class _CadastroBarState extends State<CadastroBar> {
                     labelText: "Sábado (ex: 10:00 às 24:00)",
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) =>
-                    value == null || value.isEmpty ? "Informe o horário" : null,
                 ),
 
                 const SizedBox(height: 16),
@@ -307,8 +303,6 @@ class _CadastroBarState extends State<CadastroBar> {
                     labelText: "Domingo (ex: Fechado)",
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) =>
-                    value == null || value.isEmpty ? "Informe o horário" : null,
                 ),
 
                 const SizedBox(height: 32),
@@ -325,13 +319,15 @@ class _CadastroBarState extends State<CadastroBar> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         try {
-                          print('Endereço passado para BarModel: ${enderecoController.text}');
+                          String enderecoFinal = enderecoController.text.trim().isEmpty
+                            ? "Não informado"
+                            : enderecoController.text.trim();
                           final barModel = BarModel(
                             nome: nomeController.text,
                             latitude: latitude?.toString() ?? "0.0",  // Convertendo double para string
                             longitude: longitude?.toString() ?? "0.0", // Convertendo double para string
                             linkImagem: linkController.text,
-                            endereco: enderecoController.text,
+                            endereco: enderecoFinal,
                             musica: {
                               'jukebox': jukebox,
                               'ambiente': ambiente,

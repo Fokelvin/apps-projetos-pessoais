@@ -3,8 +3,10 @@ import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:logger/logger.dart';
 
 class UserProvider extends ChangeNotifier {
+  static final Logger _logger = Logger();
   bool isLoading = false;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -36,7 +38,11 @@ class UserProvider extends ChangeNotifier {
       password: pass,
     ).then((userCredential) async {
       firebaseUser = userCredential.user;
-
+      
+      // Envia o e-mail de verificação
+      await firebaseUser?.sendEmailVerification();
+      
+      // Aqui você pode salvar os dados se ainda não existirem
       await _saveUserData(userData);
 
       onSuccess();
@@ -77,15 +83,29 @@ class UserProvider extends ChangeNotifier {
     required String email,
     required String pass,
     required VoidCallback onSuccess,
-    required VoidCallback onFail,
+    required Function(String) onFail,
   }) async {
     isLoading = true;
     notifyListeners();
 
     _auth
         .signInWithEmailAndPassword(email: email, password: pass)
-        .then((userData) async {
-      firebaseUser = userData.user;
+        .then((userCredential) async {
+      firebaseUser = userCredential.user;
+
+      // RECARREGUE O USUÁRIO AQUI!
+      await firebaseUser?.reload();
+      firebaseUser = _auth.currentUser;
+      
+      if (firebaseUser != null && !firebaseUser!.emailVerified) {
+        _logger.i(firebaseUser);
+        await _auth.signOut();
+        firebaseUser = null;
+        isLoading = false;
+        notifyListeners();
+        onFail('Por favor, verifique seu e-mail antes de acessar.');
+        return;
+      }
 
       await _loadCurrentUser();
 
@@ -93,10 +113,18 @@ class UserProvider extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
     }).catchError((e) {
-      onFail();
+      onFail(e);
       isLoading = false;
       notifyListeners();
     });
+  }
+
+  Future<void> _saveUserData(Map<String, dynamic> userData) async {
+    this.userData = userData;
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(firebaseUser?.uid)
+        .set(userData);
   }
 
 Future<void> recoverPass({
@@ -132,13 +160,13 @@ Future<void> recoverPass({
     notifyListeners();
   }
 
-  Future<void> _saveUserData(Map<String, dynamic> userData) async {
-    this.userData = userData;
-    await FirebaseFirestore.instance
-        .collection("users")
-        .doc(firebaseUser?.uid)
-        .set(userData);
-  }
+  // Future<void> _saveUserData(Map<String, dynamic> userData) async {
+  //   this.userData = userData;
+  //   await FirebaseFirestore.instance
+  //       .collection("users")
+  //       .doc(firebaseUser?.uid)
+  //       .set(userData);
+  // }
 
   Future<void> _loadCurrentUser() async {
     firebaseUser ??= _auth.currentUser;

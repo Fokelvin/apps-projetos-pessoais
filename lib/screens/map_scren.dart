@@ -3,6 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:meu_buteco/models/bar_model.dart';
+import 'dart:developer' as developer;
+import 'package:permission_handler/permission_handler.dart';
+
 
 class MapBarScreen extends StatefulWidget {
 
@@ -31,11 +34,16 @@ class _MapBarScreenState extends State<MapBarScreen> {
   String? _closestBarName;
   bool _isLoading = true;
   String? _selectedBarId;
+  String? _errorMessage;
+  bool _locationPermissionGranted = false;
 
   @override
   void initState() {
     super.initState();
+    developer.log('MapBarScreen: initState iniciado');
+    
     if(widget.lat != null && widget.long != null){
+      developer.log('MapBarScreen: Coordenadas recebidas - lat: ${widget.lat}, long: ${widget.long}');
       _cameraPosition = CameraPosition(
         target: LatLng(widget.lat!, widget.long!),
         zoom: 18
@@ -43,7 +51,65 @@ class _MapBarScreenState extends State<MapBarScreen> {
       _closestBar = LatLng(widget.lat!, widget.long!);
       _closestBarName = widget.barName;
     }
+    _initializeMap();
+  }
+
+  Future<void> _initializeMap() async {
+    await _requestLocationPermission();
     _carregarBares();
+  }
+
+  Future<void> _requestLocationPermission() async {
+    try {
+      developer.log('MapBarScreen: Verificando permissões de localização');
+      
+      // Verifica o status atual da permissão
+      PermissionStatus status = await Permission.location.status;
+      developer.log('MapBarScreen: Status da permissão: $status');
+      
+      if (status.isGranted) {
+        developer.log('MapBarScreen: Permissão já concedida');
+        setState(() {
+          _locationPermissionGranted = true;
+        });
+        return;
+      }
+      
+      if (status.isDenied) {
+        developer.log('MapBarScreen: Solicitando permissão de localização');
+        status = await Permission.location.request();
+        developer.log('MapBarScreen: Resultado da solicitação: $status');
+      }
+      
+      if (status.isPermanentlyDenied) {
+        developer.log('MapBarScreen: Permissão negada permanentemente');
+        setState(() {
+          _errorMessage = 'Permissão de localização negada. Vá em Configurações > Apps > Meu Buteco > Permissões e habilite a localização.';
+        });
+        return;
+      }
+      
+      if (status.isGranted) {
+        developer.log('MapBarScreen: Permissão concedida com sucesso');
+        setState(() {
+          _locationPermissionGranted = true;
+        });
+      } else {
+        developer.log('MapBarScreen: Permissão negada');
+        setState(() {
+          _errorMessage = 'Permissão de localização necessária para mostrar sua localização no mapa.';
+        });
+      }
+    } catch (e) {
+      developer.log('MapBarScreen: Erro ao solicitar permissão: $e');
+      setState(() {
+        _errorMessage = 'Erro ao solicitar permissão de localização: $e';
+      });
+    }
+  }
+
+  Future<void> _openAppSettings() async {
+    await openAppSettings();
   }
 
   // ALTERAÇÃO: Adicionado método dispose para limpar recursos
@@ -57,9 +123,19 @@ class _MapBarScreenState extends State<MapBarScreen> {
 
   Future<void> _carregarBares() async {
     try {
-      final lista = await BarModel.buscarBares();
+      developer.log('MapBarScreen: Iniciando carregamento dos bares');
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+      });
       
-      if (!mounted) return;
+      final lista = await BarModel.buscarBares();
+      developer.log('MapBarScreen: Bares carregados - ${lista.length} bares encontrados');
+      
+      if (!mounted) {
+        developer.log('MapBarScreen: Widget não está mais montado, abortando');
+        return;
+      }
       
       // Se um bar específico foi passado, encontrá-lo na lista pelas coordenadas
       Map<String, dynamic>? barSelecionado;
@@ -136,17 +212,21 @@ class _MapBarScreenState extends State<MapBarScreen> {
           );
         }).toSet();
         _isLoading = false;
+        developer.log('MapBarScreen: Mapa atualizado com ${_markers.length} marcadores');
       });
     } catch (e) {
+      developer.log('MapBarScreen: Erro ao carregar bares: $e');
       if (!mounted) return;
       setState(() {
         _markers = {};
         _isLoading = false;
+        _errorMessage = 'Erro ao carregar bares: $e';
       });
     }
   }
 
   Future<void> _recarregarBares() async {
+    developer.log('MapBarScreen: Recarregando bares');
     await _carregarBares();
   }
 
@@ -165,18 +245,54 @@ class _MapBarScreenState extends State<MapBarScreen> {
       ),
       body: Stack(
         children: [
+          // Widget de debug temporário
+          if (_errorMessage != null || _isLoading)
+            Positioned(
+              top: 10,
+              left: 10,
+              right: 10,
+              child: Card(
+                color: _errorMessage != null ? Colors.red[100] : Colors.blue[100],
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        _errorMessage != null ? 'ERRO:' : 'DEBUG:',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      if (_errorMessage != null)
+                        Text(_errorMessage!)
+                      else ...[
+                        Text('Carregando: $_isLoading'),
+                        Text('Marcadores: ${_markers.length}'),
+                        Text('Camera: ${_cameraPosition.target.latitude}, ${_cameraPosition.target.longitude}'),
+                        Text('Permissão: $_locationPermissionGranted'),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          
           GoogleMap(
             initialCameraPosition: _cameraPosition,
             markers: _markers,
             onMapCreated: (controller) {
               try {
+                developer.log('MapBarScreen: Mapa criado com sucesso');
                 _mapController = controller;
               } catch (e) {
-                //print('Erro ao criar mapa: $e');
+                developer.log('MapBarScreen: Erro ao criar mapa: $e');
+                setState(() {
+                  _errorMessage = 'Erro ao criar mapa: $e';
+                });
               }
             },
-            myLocationEnabled: true,
-            myLocationButtonEnabled: true,
+            myLocationEnabled: _locationPermissionGranted,
+            myLocationButtonEnabled: _locationPermissionGranted,
             mapType: MapType.normal,
             zoomControlsEnabled: true,
           ),
@@ -187,6 +303,44 @@ class _MapBarScreenState extends State<MapBarScreen> {
               color: Colors.black.withValues(alpha: 0.3),
               child: const Center(
                 child: CircularProgressIndicator(),
+              ),
+            ),
+          
+          // Mensagem de erro
+          if (_errorMessage != null)
+            Container(
+              color: Colors.red.withValues(alpha: 0.8),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.error, color: Colors.white, size: 48),
+                      const SizedBox(height: 8),
+                      Text(
+                        _errorMessage!,
+                        style: const TextStyle(color: Colors.white),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton(
+                            onPressed: _recarregarBares,
+                            child: const Text('Tentar Novamente'),
+                          ),
+                          if (_errorMessage!.contains('Permissão'))
+                            ElevatedButton(
+                              onPressed: _openAppSettings,
+                              child: const Text('Configurações'),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           
