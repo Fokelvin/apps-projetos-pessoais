@@ -18,8 +18,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
   final _passwordConfirm = TextEditingController();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
-  final _addresController = TextEditingController();
-
+  
   bool _obscurePassword = true;
   bool _obscurePasswordConfirm = true;
 
@@ -80,23 +79,6 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                   keyboardType: TextInputType.emailAddress,
                 ),
                 SizedBox(height: 16.0,),
-
-                //Endereço
-                TextFormField(
-                  controller: _addresController,
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (text){
-                    if(text!.isEmpty) {
-                      return "Insira um endereço valido";
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    hintText: "Endereço",
-                  ),
-                ),
-                SizedBox(height: 16.0,),
-
                 //Senha1
                 TextFormField(
                   controller: _passwordController,
@@ -121,7 +103,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                   ),
                   obscureText: _obscurePassword,
                 ),
-                SizedBox(height: 8.0),
+                SizedBox(height: 16.0),
                 //Senha2
                 TextFormField(
                   controller: _passwordConfirm,
@@ -168,7 +150,6 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                         Map<String, dynamic> userData = {
                           "name" : _nameController.text,
                           "email" : _emailController.text,
-                          "endereco": _addresController.text
                         };
                         Provider.of<UserProvider>(context, listen: false).signUp(
                           userData: userData, 

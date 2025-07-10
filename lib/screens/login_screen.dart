@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 labelText: 'Senha',
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                    _obscurePassword ? Icons.visibility : Icons.visibility_off,
                   ),
                   onPressed: (){
                     setState(() {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meu_buteco/firebase_options.dart';
-import 'package:meu_buteco/screens/register_user.dart';
+import 'package:meu_buteco/screens/register_user_screen.dart';
 import 'package:meu_buteco/screens/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meu_buteco/screens/login_screen.dart';
