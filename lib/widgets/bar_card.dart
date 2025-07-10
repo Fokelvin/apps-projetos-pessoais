@@ -48,7 +48,18 @@ class _BarCardState extends State<BarCard> {
         trailing: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.expand_more),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 500),
+              transitionBuilder: (child, animation) => RotationTransition(
+                turns: Tween<double>(begin: 0.0, end: 0.5).animate(animation),
+                child: child,
+              ),
+              child: Icon(
+                widget.expanded ? Icons.remove_circle_outline : Icons.add_circle_outline,
+                key: ValueKey(widget.expanded),
+                color: Colors.black,
+              ),
+            ),
             const SizedBox(height: 2),
             Text(
               widget.expanded ? "ver menos" : "ver mais",

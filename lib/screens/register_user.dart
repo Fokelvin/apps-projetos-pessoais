@@ -14,11 +14,14 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final _senhaController = TextEditingController();
-  final _confirmarSenhaController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _passwordConfirm = TextEditingController();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
-  final _enderecoController = TextEditingController();
+  final _addresController = TextEditingController();
+
+  bool _obscurePassword = true;
+  bool _obscurePasswordConfirm = true;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
       appBar: AppBar(
         title: Text("CRIAR CONTA",
         style: TextStyle(
-          color: Colors.white,
+          color: Colors.black,
         ),),
         backgroundColor: Theme.of(context).colorScheme.primary,
         centerTitle: true,
@@ -80,7 +83,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
 
                 //Endereço
                 TextFormField(
-                  controller: _enderecoController,
+                  controller: _addresController,
                   keyboardType: TextInputType.emailAddress,
                   validator: (text){
                     if(text!.isEmpty) {
@@ -96,35 +99,55 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
 
                 //Senha1
                 TextFormField(
-                  controller: _senhaController,
+                  controller: _passwordController,
                   validator: (text){
                     if(text!.isEmpty || text.length < 6) {
                       return "Insira uma senha valida";
                     }
                     return null;
-                  },              
+                  }, 
                   decoration: InputDecoration(
-                    hintText: "Senha",
+                    labelText: 'Senha',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: (){
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
+                    ),
                   ),
-                  obscureText: true,
+                  obscureText: _obscurePassword,
                 ),
-                
+                SizedBox(height: 8.0),
                 //Senha2
                 TextFormField(
-                  controller: _confirmarSenhaController,
+                  controller: _passwordConfirm,
                   validator: (text){
                     if(text!.isEmpty || text.length < 6) {
                       return "Insira uma senha válida";
                     }
-                    if(text != _senhaController.text){
+                    if(text != _passwordController.text){
                       return "As senhas não são iguais";
                     }
                     return null;
                   },              
                   decoration: InputDecoration(
                     hintText: "Confirme sua senha",
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePasswordConfirm ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: (){
+                        setState(() {
+                          _obscurePasswordConfirm = !_obscurePasswordConfirm;
+                        });
+                      },
+                    ),
                   ),
-                  obscureText: true,
+                  obscureText: _obscurePasswordConfirm,
                 ),
                 SizedBox(height: 16.0),
                 
@@ -145,11 +168,11 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                         Map<String, dynamic> userData = {
                           "name" : _nameController.text,
                           "email" : _emailController.text,
-                          "endereco": _enderecoController.text
+                          "endereco": _addresController.text
                         };
                         Provider.of<UserProvider>(context, listen: false).signUp(
                           userData: userData, 
-                          pass: _senhaController.text, 
+                          pass: _passwordController.text, 
                           onSuccess: _onSuccess, 
                           onFail: _onFail,
                         );

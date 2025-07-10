@@ -9,8 +9,7 @@ import 'package:meu_buteco/models/user_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'screens/user_profile_screen.dart';
 import 'screens/search_screen.dart';
-
-
+import 'widgets/themes.dart';
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
@@ -21,54 +20,7 @@ class MainApp extends StatelessWidget {
       create: (_) => UserProvider(),
       child: MaterialApp(
         title: 'Meu Buteco',
-        theme: ThemeData(
-          colorScheme: ColorScheme(
-            brightness: Brightness.light,
-            primary: Colors.white,      // fundo e botões principais
-            onPrimary: Colors.black,    // textos/ícones sobre primary
-            secondary: Colors.white,    // pode ser igual ao primary
-            onSecondary: Colors.black,
-            surface: Colors.white,
-            onSurface: Colors.black,
-            error: Colors.red,
-            onError: Colors.white,
-          ),
-          inputDecorationTheme: InputDecorationTheme(
-            labelStyle: TextStyle(color: Colors.black), // label quando não focado
-            floatingLabelStyle: TextStyle(color: Colors.purple[900]),
-            filled: true, // ativa o preenchimento
-            fillColor: Colors.grey[100], // cor de fundo levemente cinza
-            border: OutlineInputBorder(), // borda padrão
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey), // borda quando não focado
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.purple[900]!), // borda quando focado
-            ), // label quando focado
-          ),
-          scaffoldBackgroundColor: Colors.white,
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.black,
-            iconTheme: IconThemeData(color: Colors.black),
-            titleTextStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 22),
-          ),
-          textTheme: const TextTheme(
-            bodyLarge: TextStyle(color: Colors.black),
-            bodyMedium: TextStyle(color: Colors.black),
-            bodySmall: TextStyle(color: Colors.black),
-          ),
-          tooltipTheme: TooltipThemeData(
-            textStyle: TextStyle(
-              color: Colors.black, // Texto preto no tooltip
-            ),
-          //Você pode customizar o fundo também, se quiser:
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(4),
-          ),
-          ),
-        ),
+        theme: meuButecoTheme,
         home: HomeScreen(),
         routes: {
           '/home' : (context) => HomeScreen(),
