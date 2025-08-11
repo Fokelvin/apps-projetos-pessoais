@@ -19,9 +19,24 @@ class BarScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if(bar["linkImagem"] !=null)
+            if(bar["linkImagem"] != null && bar["linkImagem"].toString().isNotEmpty)
               Image.network(
                 bar["linkImagem"],
+                height: 250,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset(
+                    'assets/icon/icon.png',
+                    height: 250,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  );
+                },
+              )
+            else
+              Image.asset(
+                'assets/icon/icon.png',
                 height: 250,
                 width: double.infinity,
                 fit: BoxFit.cover,

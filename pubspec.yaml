@@ -32,7 +32,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  assets: [".env"]  # Corrigido aqui - usando colchetes
+  assets: 
+    - ".env"
+    - "assets/icon/"
 
 flutter_launcher_icons:
   android: "launcher_icon"

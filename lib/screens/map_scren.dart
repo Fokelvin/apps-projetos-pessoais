@@ -363,11 +363,11 @@ class _MapBarScreenState extends State<MapBarScreen> {
                           CircleAvatar(
                             radius: 20,
                             backgroundColor: Theme.of(context).colorScheme.primary.withAlpha(26),
-                            backgroundImage: _selectedBar!["linkImagem"] != null
+                            backgroundImage: (_selectedBar!["linkImagem"] != null && _selectedBar!["linkImagem"].toString().isNotEmpty)
                                 ? NetworkImage(_selectedBar!["linkImagem"])
-                                : null,
-                            child: _selectedBar!["linkImagem"] == null
-                                ? const Icon(Icons.sports_bar)
+                                : const AssetImage('assets/icon/icon.png') as ImageProvider,
+                            child: (_selectedBar!["linkImagem"] == null || _selectedBar!["linkImagem"].toString().isEmpty)
+                                ? null
                                 : null,
                           ),
                           const SizedBox(width: 12),

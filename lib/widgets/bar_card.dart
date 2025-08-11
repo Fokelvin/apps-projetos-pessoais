@@ -76,11 +76,11 @@ class _BarCardState extends State<BarCard> {
               CircleAvatar(
                 radius: 26,
                 backgroundColor: Theme.of(context).colorScheme.primary.withAlpha(26),
-                backgroundImage: widget.bar["linkImagem"] != null
+                backgroundImage: (widget.bar["linkImagem"] != null && widget.bar["linkImagem"].toString().isNotEmpty)
                     ? NetworkImage(widget.bar["linkImagem"])
-                    : null,
-                child: widget.bar["linkImagem"] == null
-                    ? const Icon(Icons.sports_bar)
+                    : const AssetImage('assets/icon/icon.png') as ImageProvider,
+                child: (widget.bar["linkImagem"] == null || widget.bar["linkImagem"].toString().isEmpty)
+                    ? null
                     : null,
               ),
               const SizedBox(height: 2),
