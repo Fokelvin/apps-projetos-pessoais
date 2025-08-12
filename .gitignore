@@ -50,9 +50,6 @@ app.*.map.json
 # Imagens
 ../imagens/
 
-# Android Manifest
-android/app/src/main/AndroidManifest.xml
-
 # env
 .env
 
