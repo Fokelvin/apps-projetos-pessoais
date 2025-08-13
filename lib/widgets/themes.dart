@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 final ThemeData meuButecoTheme = ThemeData(
   colorScheme: ColorScheme(
     brightness: Brightness.light,
-    primary: Colors.white,      // fundo e botões principais
-    onPrimary: Colors.black,    // textos/ícones sobre primary
-    secondary: Colors.white,    // pode ser igual ao primary
+    primary: Colors.white, // fundo e botões principais
+    onPrimary: Colors.black, // textos/ícones sobre primary
+    secondary: Colors.white, // pode ser igual ao primary
     onSecondary: Colors.black,
     surface: Colors.white,
     onSurface: Colors.black,
@@ -29,6 +29,10 @@ final ThemeData meuButecoTheme = ThemeData(
     backgroundColor: Colors.white,
     foregroundColor: Colors.black,
     iconTheme: IconThemeData(color: Colors.black),
-    titleTextStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 22),
+    titleTextStyle: TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.bold,
+      fontSize: 22,
+    ),
   ),
 );

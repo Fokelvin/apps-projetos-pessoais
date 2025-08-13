@@ -19,9 +19,9 @@ class _CadastroBarState extends State<CadastroBar> {
   final nomeController = TextEditingController();
   final linkController = TextEditingController();
   final enderecoController = TextEditingController();
-  
-  late final DotEnv env; 
-  
+
+  late final DotEnv env;
+
   // Controllers para horários
   final segundaSextaController = TextEditingController();
   final sabadoController = TextEditingController();
@@ -39,9 +39,10 @@ class _CadastroBarState extends State<CadastroBar> {
   // Variáveis para armazenar as coordenadas
   double? latitude;
   double? longitude;
-  final googleApiKey = kIsWeb
-    ? dotenv.env['GOOGLE_PLACES_API_KEY_WEB']
-    : dotenv.env['GOOGLE_PLACES_API_KEY_MOBILE'];
+  final googleApiKey =
+      kIsWeb
+          ? dotenv.env['GOOGLE_PLACES_API_KEY_WEB']
+          : dotenv.env['GOOGLE_PLACES_API_KEY_MOBILE'];
 
   @override
   void initState() {
@@ -67,25 +68,25 @@ class _CadastroBarState extends State<CadastroBar> {
                 // Informações básicas
                 const Text(
                   "Informações Básicas",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
-                
+
                 TextFormField(
                   controller: nomeController,
                   decoration: const InputDecoration(
                     labelText: "Nome do Bar",
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) =>
-                    value == null || value.isEmpty ? "Informe o nome" : null,
+                  validator:
+                      (value) =>
+                          value == null || value.isEmpty
+                              ? "Informe o nome"
+                              : null,
                 ),
 
                 const SizedBox(height: 16),
-                
+
                 // Campo de busca de endereço
                 GooglePlaceAutoCompleteTextField(
                   textEditingController: enderecoController,
@@ -105,7 +106,7 @@ class _CadastroBarState extends State<CadastroBar> {
                     latitude = double.parse(prediction.lat!);
                     longitude = double.parse(prediction.lng!);
                   },
-                  itemClick : (Prediction prediction) {
+                  itemClick: (Prediction prediction) {
                     enderecoController.text = prediction.description!;
                     enderecoController.selection = TextSelection.fromPosition(
                       TextPosition(offset: prediction.description!.length),
@@ -120,9 +121,7 @@ class _CadastroBarState extends State<CadastroBar> {
                         children: [
                           const Icon(Icons.location_on),
                           const SizedBox(width: 10),
-                          Expanded(
-                            child: Text(prediction.description!),
-                          ),
+                          Expanded(child: Text(prediction.description!)),
                         ],
                       ),
                     );
@@ -146,9 +145,10 @@ class _CadastroBarState extends State<CadastroBar> {
                     labelText: "Link da Imagem",
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value){
-                    if(value == null || value.isEmpty){
-                      linkController.text = "https://rzhnjeisknsdgaogvxfg.supabase.co/storage/v1/object/public/imagens//logo.jpeg";
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      linkController.text =
+                          "https://rzhnjeisknsdgaogvxfg.supabase.co/storage/v1/object/public/imagens//logo.jpeg";
                     }
                     return null;
                   },
@@ -159,10 +159,7 @@ class _CadastroBarState extends State<CadastroBar> {
                 // Música
                 const Text(
                   "Música",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Row(
@@ -223,10 +220,7 @@ class _CadastroBarState extends State<CadastroBar> {
                 // Transmissão de jogos
                 const Text(
                   "Transmissão de Jogos",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Row(
@@ -235,14 +229,16 @@ class _CadastroBarState extends State<CadastroBar> {
                       child: CheckboxListTile(
                         title: const Text("TV"),
                         value: tv,
-                        onChanged: (value) => setState(() => tv = value ?? false),
+                        onChanged:
+                            (value) => setState(() => tv = value ?? false),
                       ),
                     ),
                     Expanded(
                       child: CheckboxListTile(
                         title: const Text("Telão"),
                         value: telao,
-                        onChanged: (value) => setState(() => telao = value ?? false),
+                        onChanged:
+                            (value) => setState(() => telao = value ?? false),
                       ),
                     ),
                   ],
@@ -253,10 +249,7 @@ class _CadastroBarState extends State<CadastroBar> {
                 // Wi-Fi
                 const Text(
                   "Wi-Fi",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 CheckboxListTile(
@@ -270,10 +263,7 @@ class _CadastroBarState extends State<CadastroBar> {
                 // Horário de funcionamento
                 const Text(
                   "Horário de Funcionamento",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
 
@@ -319,13 +309,18 @@ class _CadastroBarState extends State<CadastroBar> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         try {
-                          String enderecoFinal = enderecoController.text.trim().isEmpty
-                            ? "Não informado"
-                            : enderecoController.text.trim();
+                          String enderecoFinal =
+                              enderecoController.text.trim().isEmpty
+                                  ? "Não informado"
+                                  : enderecoController.text.trim();
                           final barModel = BarModel(
                             nome: nomeController.text,
-                            latitude: latitude?.toString() ?? "0.0",  // Convertendo double para string
-                            longitude: longitude?.toString() ?? "0.0", // Convertendo double para string
+                            latitude:
+                                latitude?.toString() ??
+                                "0.0", // Convertendo double para string
+                            longitude:
+                                longitude?.toString() ??
+                                "0.0", // Convertendo double para string
                             linkImagem: linkController.text,
                             endereco: enderecoFinal,
                             musica: {
@@ -334,10 +329,7 @@ class _CadastroBarState extends State<CadastroBar> {
                               'aoVivo': aoVivo,
                               'semMusica': semMusica,
                             },
-                            transmissao: {
-                              'tv': tv,
-                              'telao': telao,
-                            },
+                            transmissao: {'tv': tv, 'telao': telao},
                             wifi: wifi,
                             horario: {
                               'segundaSexta': segundaSextaController.text,
@@ -347,24 +339,27 @@ class _CadastroBarState extends State<CadastroBar> {
                           );
                           await barModel.salvarNoFirebase();
                           if (!context.mounted) return;
-                          
+
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Bar cadastrado com sucesso!")),
+                            const SnackBar(
+                              content: Text("Bar cadastrado com sucesso!"),
+                            ),
                           );
-                          Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+                          Navigator.of(
+                            context,
+                          ).pushNamedAndRemoveUntil('/home', (route) => false);
                         } catch (e) {
                           if (!context.mounted) return;
-                          
+
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Erro ao cadastrar bar: $e")),
+                            SnackBar(
+                              content: Text("Erro ao cadastrar bar: $e"),
+                            ),
                           );
                         }
                       }
                     },
-                    child: const Text(
-                      "Salvar",
-                      style: TextStyle(fontSize: 16),
-                    ),
+                    child: const Text("Salvar", style: TextStyle(fontSize: 16)),
                   ),
                 ),
               ],

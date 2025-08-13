@@ -13,7 +13,7 @@ class BarModel {
   final bool wifi;
   final Map<String, String> horario;
   final String endereco;
-  
+
   BarModel({
     required this.nome,
     required this.latitude,
@@ -23,7 +23,7 @@ class BarModel {
     required this.transmissao,
     required this.wifi,
     required this.horario,
-    required this.endereco
+    required this.endereco,
   });
 
   Map<String, dynamic> toMap() {
@@ -36,12 +36,14 @@ class BarModel {
       "transmissao": transmissao,
       "wifi": wifi,
       "horario": horario,
-      "endereco" : endereco
+      "endereco": endereco,
     };
   }
 
   Future<String> salvarNoFirebase() async {
-    final docRef = await FirebaseFirestore.instance.collection("bares").add(toMap());
+    final docRef = await FirebaseFirestore.instance
+        .collection("bares")
+        .add(toMap());
     return docRef.id;
   }
 
@@ -59,10 +61,10 @@ class BarModel {
     if (value == null) {
       return 0.0;
     }
-    
+
     if (value is double) return value;
     if (value is int) return value.toDouble();
-    
+
     if (value is String) {
       final cleanValue = value.trim();
       if (cleanValue.isEmpty) {
@@ -74,21 +76,25 @@ class BarModel {
       }
       return parsed ?? 0.0;
     }
-    
+
     if (value is bool) {
       print('Aviso: Campo $fieldName é boolean ($value). Convertendo para 0.0');
       return 0.0;
     }
-    
+
     try {
       final stringValue = value.toString();
       final parsed = double.tryParse(stringValue);
       if (parsed == null) {
-        print('Erro: Campo $fieldName tem tipo inesperado: ${value.runtimeType}, valor: $value');
+        print(
+          'Erro: Campo $fieldName tem tipo inesperado: ${value.runtimeType}, valor: $value',
+        );
       }
       return parsed ?? 0.0;
     } catch (e) {
-      print('Erro ao converter $fieldName para double: $value (tipo: ${value.runtimeType})');
+      print(
+        'Erro ao converter $fieldName para double: $value (tipo: ${value.runtimeType})',
+      );
       return 0.0;
     }
   }
@@ -98,7 +104,7 @@ class BarModel {
     if (lat == 0.0 && lng == 0.0) {
       return "Coordenadas não informadas";
     }
-    
+
     print('Buscando endereço para: lat=$lat, lng=$lng');
     try {
       List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
@@ -106,11 +112,12 @@ class BarModel {
       if (placemarks.isNotEmpty) {
         final place = placemarks.first;
         List<String> enderecoParts = [];
-        
+
         if (place.street != null && place.street!.isNotEmpty) {
           enderecoParts.add(place.street!);
         }
-        if (place.subThoroughfare != null && place.subThoroughfare!.isNotEmpty) {
+        if (place.subThoroughfare != null &&
+            place.subThoroughfare!.isNotEmpty) {
           enderecoParts.add(place.subThoroughfare!);
         }
         if (place.subLocality != null && place.subLocality!.isNotEmpty) {
@@ -119,9 +126,9 @@ class BarModel {
         if (place.locality != null && place.locality!.isNotEmpty) {
           enderecoParts.add(place.locality!);
         }
-        
-        return enderecoParts.isNotEmpty 
-            ? enderecoParts.join(', ') 
+
+        return enderecoParts.isNotEmpty
+            ? enderecoParts.join(', ')
             : "Endereço não encontrado";
       }
       return "Endereço não encontrado";

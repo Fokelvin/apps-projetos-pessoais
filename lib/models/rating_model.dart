@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../models/user_model.dart';
 
 class AvaliacaoModel {
-  
   final String userId;
   final String barId;
   final double ratingBanheiro;
@@ -28,15 +27,19 @@ class AvaliacaoModel {
     required this.dataAvaliacao,
   });
 
-  static Future<AvaliacaoModel?> buscarAvaliacaoExistente(String userId, String barId) async {
+  static Future<AvaliacaoModel?> buscarAvaliacaoExistente(
+    String userId,
+    String barId,
+  ) async {
     try {
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('avaliacoes')
-          .doc(barId)
-          .get();
-      
+      final doc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .collection('avaliacoes')
+              .doc(barId)
+              .get();
+
       if (!doc.exists) return null;
 
       final data = doc.data()!;
@@ -85,12 +88,11 @@ class AvaliacaoModel {
           .set(avaliacao.toMap());
 
       await FirebaseFirestore.instance
-        .collection('bares')
-        .doc(barId)
-        .collection('avaliacoes')
-        .doc(userId)
-        .set(avaliacao.toMap());
-
+          .collection('bares')
+          .doc(barId)
+          .collection('avaliacoes')
+          .doc(userId)
+          .set(avaliacao.toMap());
     } catch (e) {
       _logger.i(e);
       rethrow;
@@ -125,14 +127,13 @@ class AvaliacaoModel {
           .doc(barId)
           .update(avaliacao.toMap());
 
-              // Atualiza na coleção do bar
-    await FirebaseFirestore.instance
-        .collection('bares')
-        .doc(barId)
-        .collection('avaliacoes')
-        .doc(userId)
-        .update(avaliacao.toMap());
-
+      // Atualiza na coleção do bar
+      await FirebaseFirestore.instance
+          .collection('bares')
+          .doc(barId)
+          .collection('avaliacoes')
+          .doc(userId)
+          .update(avaliacao.toMap());
     } catch (e) {
       _logger.i(e);
       rethrow;
@@ -146,11 +147,11 @@ class AvaliacaoModel {
     required double ratingAtendimento,
     required double ratingPrecos,
   }) {
-    return ratingBanheiro > 0 && 
-           ratingBebidas > 0 && 
-           ratingComidas > 0 && 
-           ratingAtendimento > 0 && 
-           ratingPrecos > 0;
+    return ratingBanheiro > 0 &&
+        ratingBebidas > 0 &&
+        ratingComidas > 0 &&
+        ratingAtendimento > 0 &&
+        ratingPrecos > 0;
   }
 
   static Future<Map<String, dynamic>> processarAvaliacao({
@@ -189,7 +190,7 @@ class AvaliacaoModel {
       }
 
       final avaliacaoExistente = await buscarAvaliacaoExistente(userId, barId);
-      
+
       if (avaliacaoExistente != null) {
         await atualizarAvaliacao(
           userId: userId,
@@ -223,142 +224,147 @@ class AvaliacaoModel {
       }
     } catch (e) {
       _logger.i(e);
+      return {'success': false, 'message': 'Erro ao processar avaliação: $e'};
+    }
+  }
+
+  static Future<Map<String, dynamic>> carregarAvaliacaoExistente(
+    String userId,
+    String barId,
+  ) async {
+    try {
+      final avaliacao = await buscarAvaliacaoExistente(userId, barId);
+
+      if (avaliacao == null) {
+        return {
+          'success': true,
+          'jaAvaliou': false,
+          'ratings': {
+            'banheiro': 0.0,
+            'bebidas': 0.0,
+            'comidas': 0.0,
+            'atendimento': 0.0,
+            'precos': 0.0,
+          },
+        };
+      }
+
+      return {
+        'success': true,
+        'jaAvaliou': true,
+        'ratings': {
+          'banheiro': avaliacao.ratingBanheiro,
+          'bebidas': avaliacao.ratingBebidas,
+          'comidas': avaliacao.ratingComidas,
+          'atendimento': avaliacao.ratingAtendimento,
+          'precos': avaliacao.ratingPrecos,
+        },
+      };
+    } catch (e) {
+      _logger.i(e);
       return {
         'success': false,
-        'message': 'Erro ao processar avaliação: $e',
+        'message': 'Erro ao carregar avaliação existente: $e',
       };
     }
   }
 
-static Future<Map<String, dynamic>> carregarAvaliacaoExistente(String userId, String barId) async {
-  try {
-    final avaliacao = await buscarAvaliacaoExistente(userId, barId);
-    
-    if (avaliacao == null) {
-      return {
-        'success': true,
-        'jaAvaliou': false,
-        'ratings': {
-          'banheiro': 0.0,
-          'bebidas': 0.0,
-          'comidas': 0.0,
-          'atendimento': 0.0,
-          'precos': 0.0,
-        }
-      };
-    }
+  static Future<Map<String, dynamic>> calcularMediaAvaliacoes(
+    String barId,
+  ) async {
+    try {
+      //_logger.i.i('Buscando avaliações para o barId: $barId');
 
-    return {
-      'success': true,
-      'jaAvaliou': true,
-      'ratings': {
-        'banheiro': avaliacao.ratingBanheiro,
-        'bebidas': avaliacao.ratingBebidas,
-        'comidas': avaliacao.ratingComidas,
-        'atendimento': avaliacao.ratingAtendimento,
-        'precos': avaliacao.ratingPrecos,
+      // Busca todas as avaliações do estabelecimento
+      final querySnapshot =
+          await FirebaseFirestore.instance
+              .collection('bares')
+              .doc(barId)
+              .collection('avaliacoes')
+              .get();
+
+      //_logger.i.i('Total de avaliações encontradas: ${querySnapshot.docs.length}');
+
+      if (querySnapshot.docs.isEmpty) {
+        //_logger.i.i('Nenhuma avaliação encontrada para este estabelecimento');
+        return {
+          'success': true,
+          'mediaGeral': 0.0,
+          'medias': {
+            'banheiro': 0.0,
+            'bebidas': 0.0,
+            'comidas': 0.0,
+            'atendimento': 0.0,
+            'precos': 0.0,
+          },
+          'totalAvaliacoes': 0,
+        };
       }
-    };
-  } catch (e) {
-    _logger.i(e);
-    return {
-      'success': false,
-      'message': 'Erro ao carregar avaliação existente: $e',
-    };
-  }
-}
 
-static Future<Map<String, dynamic>> calcularMediaAvaliacoes(String barId) async {
-  try {
-    //_logger.i.i('Buscando avaliações para o barId: $barId');
-    
-    // Busca todas as avaliações do estabelecimento
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('bares')
-        .doc(barId)
-        .collection('avaliacoes')
-        .get();
+      double somaBanheiro = 0;
+      double somaBebidas = 0;
+      double somaComidas = 0;
+      double somaAtendimento = 0;
+      double somaPrecos = 0;
+      int totalAvaliacoes = querySnapshot.docs.length;
 
-    //_logger.i.i('Total de avaliações encontradas: ${querySnapshot.docs.length}');
-    
-    if (querySnapshot.docs.isEmpty) {
-      //_logger.i.i('Nenhuma avaliação encontrada para este estabelecimento');
+      //_logger.i.i('\nDados das avaliações:');
+      for (var doc in querySnapshot.docs) {
+        final data = doc.data();
+        //_logger.i.i('\nAvaliação do usuário ${data['userId']}:');
+        //_logger.i.i('Banheiro: ${data['ratingBanheiro']}');
+        //_logger.i.i('Bebidas: ${data['ratingBebidas']}');
+        //_logger.i.i('Comidas: ${data['ratingComidas']}');
+        //_logger.i.i('Atendimento: ${data['ratingAtendimento']}');
+        //_logger.i.i('Preços: ${data['ratingPrecos']}');
+
+        somaBanheiro += data['ratingBanheiro'] as double;
+        somaBebidas += data['ratingBebidas'] as double;
+        somaComidas += data['ratingComidas'] as double;
+        somaAtendimento += data['ratingAtendimento'] as double;
+        somaPrecos += data['ratingPrecos'] as double;
+      }
+
+      final mediaBanheiro = somaBanheiro / totalAvaliacoes;
+      final mediaBebidas = somaBebidas / totalAvaliacoes;
+      final mediaComidas = somaComidas / totalAvaliacoes;
+      final mediaAtendimento = somaAtendimento / totalAvaliacoes;
+      final mediaPrecos = somaPrecos / totalAvaliacoes;
+
+      final mediaGeral =
+          (mediaBanheiro +
+              mediaBebidas +
+              mediaComidas +
+              mediaAtendimento +
+              mediaPrecos) /
+          5;
+
+      //_logger.i.i('\nMédias calculadas:');
+      //_logger.i.i('Média Geral: $mediaGeral');
+      //_logger.i.i('Média Banheiro: $mediaBanheiro');
+      //_logger.i.i('Média Bebidas: $mediaBebidas');
+      //_logger.i.i('Média Comidas: $mediaComidas');
+      //_logger.i.i('Média Atendimento: $mediaAtendimento');
+      //_logger.i.i('Média Preços: $mediaPrecos');
+      //_logger.i.i('Total de Avaliações: $totalAvaliacoes');
+
       return {
         'success': true,
-        'mediaGeral': 0.0,
+        'mediaGeral': mediaGeral,
         'medias': {
-          'banheiro': 0.0,
-          'bebidas': 0.0,
-          'comidas': 0.0,
-          'atendimento': 0.0,
-          'precos': 0.0,
+          'banheiro': mediaBanheiro,
+          'bebidas': mediaBebidas,
+          'comidas': mediaComidas,
+          'atendimento': mediaAtendimento,
+          'precos': mediaPrecos,
         },
-        'totalAvaliacoes': 0,
+        'totalAvaliacoes': totalAvaliacoes,
       };
+    } catch (e) {
+      _logger.i(e);
+      return {'success': false, 'message': 'Erro ao calcular médias: $e'};
     }
-
-    double somaBanheiro = 0;
-    double somaBebidas = 0;
-    double somaComidas = 0;
-    double somaAtendimento = 0;
-    double somaPrecos = 0;
-    int totalAvaliacoes = querySnapshot.docs.length;
-
-    //_logger.i.i('\nDados das avaliações:');
-    for (var doc in querySnapshot.docs) {
-      final data = doc.data();
-      //_logger.i.i('\nAvaliação do usuário ${data['userId']}:');
-      //_logger.i.i('Banheiro: ${data['ratingBanheiro']}');
-      //_logger.i.i('Bebidas: ${data['ratingBebidas']}');
-      //_logger.i.i('Comidas: ${data['ratingComidas']}');
-      //_logger.i.i('Atendimento: ${data['ratingAtendimento']}');
-      //_logger.i.i('Preços: ${data['ratingPrecos']}');
-      
-      somaBanheiro += data['ratingBanheiro'] as double;
-      somaBebidas += data['ratingBebidas'] as double;
-      somaComidas += data['ratingComidas'] as double;
-      somaAtendimento += data['ratingAtendimento'] as double;
-      somaPrecos += data['ratingPrecos'] as double;
-    }
-
-    final mediaBanheiro = somaBanheiro / totalAvaliacoes;
-    final mediaBebidas = somaBebidas / totalAvaliacoes;
-    final mediaComidas = somaComidas / totalAvaliacoes;
-    final mediaAtendimento = somaAtendimento / totalAvaliacoes;
-    final mediaPrecos = somaPrecos / totalAvaliacoes;
-
-    final mediaGeral = (mediaBanheiro + mediaBebidas + mediaComidas + 
-                       mediaAtendimento + mediaPrecos) / 5;
-
-    //_logger.i.i('\nMédias calculadas:');
-    //_logger.i.i('Média Geral: $mediaGeral');
-    //_logger.i.i('Média Banheiro: $mediaBanheiro');
-    //_logger.i.i('Média Bebidas: $mediaBebidas');
-    //_logger.i.i('Média Comidas: $mediaComidas');
-    //_logger.i.i('Média Atendimento: $mediaAtendimento');
-    //_logger.i.i('Média Preços: $mediaPrecos');
-    //_logger.i.i('Total de Avaliações: $totalAvaliacoes');
-
-    return {
-      'success': true,
-      'mediaGeral': mediaGeral,
-      'medias': {
-        'banheiro': mediaBanheiro,
-        'bebidas': mediaBebidas,
-        'comidas': mediaComidas,
-        'atendimento': mediaAtendimento,
-        'precos': mediaPrecos,
-      },
-      'totalAvaliacoes': totalAvaliacoes,
-    };
-  } catch (e) {
-    _logger.i(e);
-    return {
-      'success': false,
-      'message': 'Erro ao calcular médias: $e',
-    };
   }
-}
 
   Map<String, dynamic> toMap() {
     return {
@@ -372,4 +378,4 @@ static Future<Map<String, dynamic>> calcularMediaAvaliacoes(String barId) async 
       'dataAvaliacao': Timestamp.fromDate(dataAvaliacao),
     };
   }
-} 
+}

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:meu_buteco/screens/map_scren.dart';
+import 'package:meu_buteco/screens/map_screen.dart';
 import 'package:meu_buteco/widgets/ratings_widget.dart';
 
 class BarScreen extends StatelessWidget {
-
   final Map<String, dynamic> bar;
   final String endereco;
 
@@ -19,7 +18,8 @@ class BarScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if(bar["linkImagem"] != null && bar["linkImagem"].toString().isNotEmpty)
+            if (bar["linkImagem"] != null &&
+                bar["linkImagem"].toString().isNotEmpty)
               Image.network(
                 bar["linkImagem"],
                 height: 250,
@@ -49,7 +49,11 @@ class BarScreen extends StatelessWidget {
                   Wrap(
                     alignment: WrapAlignment.start,
                     children: [
-                      const Icon(Icons.location_on, size: 20, color: Colors.red),
+                      const Icon(
+                        Icons.location_on,
+                        size: 20,
+                        color: Colors.red,
+                      ),
                       const SizedBox(width: 4),
                       ConstrainedBox(
                         constraints: BoxConstraints(
@@ -81,10 +85,10 @@ class BarScreen extends StatelessWidget {
                           },
                           child: Text(
                             endereco,
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            ),
                             softWrap: true,
                             overflow: TextOverflow.visible,
                           ),
@@ -105,7 +109,11 @@ class BarScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      const Icon(Icons.local_bar, size: 20, color: Colors.orange),
+                      const Icon(
+                        Icons.local_bar,
+                        size: 20,
+                        color: Colors.orange,
+                      ),
                       const SizedBox(width: 8),
                       const Expanded(child: Text("Bebidas")),
                       RatingsWidget(rating: 3.5),
@@ -132,7 +140,11 @@ class BarScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      const Icon(Icons.currency_exchange, size: 20, color: Colors.amber),
+                      const Icon(
+                        Icons.currency_exchange,
+                        size: 20,
+                        color: Colors.amber,
+                      ),
                       const SizedBox(width: 8),
                       const Expanded(child: Text("Preços")),
                       RatingsWidget(rating: 3.0),
@@ -145,10 +157,11 @@ class BarScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(Icons.music_note, size: 20),
-                      const Text("Musica",
+                      const Text(
+                        "Musica",
                         style: TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.bold
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
@@ -163,10 +176,10 @@ class BarScreen extends StatelessWidget {
                           children: [
                             const Text("Jukebox"),
                             Icon(
-                              bar['musica']?['jukebox'] == true 
-                                ? Icons.check_box 
-                                : Icons.check_box_outline_blank, 
-                              size: 18
+                              bar['musica']?['jukebox'] == true
+                                  ? Icons.check_box
+                                  : Icons.check_box_outline_blank,
+                              size: 18,
                             ),
                           ],
                         ),
@@ -175,10 +188,10 @@ class BarScreen extends StatelessWidget {
                           children: [
                             const Text("Ambiente"),
                             Icon(
-                              bar['musica']?['ambiente'] == true 
-                                ? Icons.check_box 
-                                : Icons.check_box_outline_blank, 
-                              size: 18
+                              bar['musica']?['ambiente'] == true
+                                  ? Icons.check_box
+                                  : Icons.check_box_outline_blank,
+                              size: 18,
                             ),
                           ],
                         ),
@@ -187,10 +200,10 @@ class BarScreen extends StatelessWidget {
                           children: [
                             const Text("Ao-Vivo"),
                             Icon(
-                              bar['musica']?['aoVivo'] == true 
-                                ? Icons.check_box 
-                                : Icons.check_box_outline_blank, 
-                              size: 18
+                              bar['musica']?['aoVivo'] == true
+                                  ? Icons.check_box
+                                  : Icons.check_box_outline_blank,
+                              size: 18,
                             ),
                           ],
                         ),
@@ -199,15 +212,15 @@ class BarScreen extends StatelessWidget {
                           children: [
                             const Text("Sem Musica"),
                             Icon(
-                              bar['musica']?['semMusica'] == true 
-                                ? Icons.check_box 
-                                : Icons.check_box_outline_blank, 
-                              size: 18
+                              bar['musica']?['semMusica'] == true
+                                  ? Icons.check_box
+                                  : Icons.check_box_outline_blank,
+                              size: 18,
                             ),
                           ],
                         ),
                       ],
-                    ), 
+                    ),
                   ),
                   const SizedBox(height: 4),
                   const Divider(height: 4),
@@ -218,10 +231,11 @@ class BarScreen extends StatelessWidget {
                         children: const [
                           Icon(Icons.sports_soccer, size: 20),
                           SizedBox(width: 4),
-                          Text("Transmissão de jogos",
+                          Text(
+                            "Transmissão de jogos",
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.bold
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
@@ -236,10 +250,10 @@ class BarScreen extends StatelessWidget {
                                 children: [
                                   const Text("TV"),
                                   Icon(
-                                    bar['transmissao']?['tv'] == true 
-                                      ? Icons.check_box 
-                                      : Icons.check_box_outline_blank, 
-                                    size: 20
+                                    bar['transmissao']?['tv'] == true
+                                        ? Icons.check_box
+                                        : Icons.check_box_outline_blank,
+                                    size: 20,
                                   ),
                                 ],
                               ),
@@ -249,10 +263,10 @@ class BarScreen extends StatelessWidget {
                                   const SizedBox(width: 8),
                                   const Text("Telao"),
                                   Icon(
-                                    bar['transmissao']?['telao'] == true 
-                                      ? Icons.check_box 
-                                      : Icons.check_box_outline_blank, 
-                                    size: 20
+                                    bar['transmissao']?['telao'] == true
+                                        ? Icons.check_box
+                                        : Icons.check_box_outline_blank,
+                                    size: 20,
                                   ),
                                 ],
                               ),
@@ -269,20 +283,24 @@ class BarScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.signal_wifi_statusbar_4_bar_rounded, size: 20),
+                          const Icon(
+                            Icons.signal_wifi_statusbar_4_bar_rounded,
+                            size: 20,
+                          ),
                           const SizedBox(width: 4),
-                          const Text("WI-Fi",
+                          const Text(
+                            "WI-Fi",
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.bold
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(width: 4),
                           Icon(
-                            bar['wifi'] == true 
-                              ? Icons.check_box 
-                              : Icons.check_box_outline_blank, 
-                            size: 20
+                            bar['wifi'] == true
+                                ? Icons.check_box
+                                : Icons.check_box_outline_blank,
+                            size: 20,
                           ),
                         ],
                       ),
@@ -298,10 +316,11 @@ class BarScreen extends StatelessWidget {
                         children: const [
                           Icon(Icons.access_time, size: 20),
                           SizedBox(width: 4),
-                          Text("Horario de funcioamento",
+                          Text(
+                            "Horario de funcioamento",
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.bold
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           SizedBox(width: 4),
@@ -312,22 +331,37 @@ class BarScreen extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              const Icon(Icons.calendar_month_rounded, size: 20),
-                              Text("Segunda a sexta: ${bar['horario']?['segundaSexta'] ?? 'Não informado'}"),
+                              const Icon(
+                                Icons.calendar_month_rounded,
+                                size: 20,
+                              ),
+                              Text(
+                                "Segunda a sexta: ${bar['horario']?['segundaSexta'] ?? 'Não informado'}",
+                              ),
                             ],
                           ),
                           const SizedBox(height: 8),
                           Row(
                             children: [
-                              const Icon(Icons.calendar_month_rounded, size: 20),
-                              Text("Sábado: ${bar['horario']?['sabado'] ?? 'Não informado'}"),
+                              const Icon(
+                                Icons.calendar_month_rounded,
+                                size: 20,
+                              ),
+                              Text(
+                                "Sábado: ${bar['horario']?['sabado'] ?? 'Não informado'}",
+                              ),
                             ],
                           ),
                           const SizedBox(height: 8),
                           Row(
                             children: [
-                              const Icon(Icons.calendar_month_rounded, size: 20),
-                              Text("Domingo: ${bar['horario']?['domingo'] ?? 'Não informado'}"),
+                              const Icon(
+                                Icons.calendar_month_rounded,
+                                size: 20,
+                              ),
+                              Text(
+                                "Domingo: ${bar['horario']?['domingo'] ?? 'Não informado'}",
+                              ),
                             ],
                           ),
                         ],
@@ -336,7 +370,7 @@ class BarScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   const Divider(height: 4),
-                ]
+                ],
               ),
             ),
           ],

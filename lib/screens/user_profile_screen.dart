@@ -14,7 +14,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final _nameController = TextEditingController();
   final _enderecoController = TextEditingController();
   final _telefoneController = TextEditingController();
-  
+
   bool _isEditing = false;
 
   @override
@@ -40,9 +40,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   void _saveChanges() {
     if (_formKey.currentState!.validate()) {
-
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Funcionalidade de salvamento em desenvolvimento')),
+        const SnackBar(
+          content: Text('Funcionalidade de salvamento em desenvolvimento'),
+        ),
       );
       setState(() {
         _isEditing = false;
@@ -56,7 +57,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       _isEditing = false;
     });
   }
-//Diasfoke1304#
+
+  //Diasfoke1304#
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,12 +79,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.edit, size: 20.0,),
+                          Icon(Icons.edit, size: 20.0),
                           SizedBox(height: 2),
-                          Text(
-                            'Editar perfil',
-                            style: TextStyle(fontSize: 12),
-                          ),
+                          Text('Editar perfil', style: TextStyle(fontSize: 12)),
                         ],
                       ),
                     ),
@@ -98,16 +97,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         borderRadius: BorderRadius.circular(24),
                         onTap: _saveChanges,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0,
+                            vertical: 2.0,
+                          ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(Icons.save, size: 20.0),
                               SizedBox(height: 2),
-                              Text(
-                                'Salvar',
-                                style: TextStyle(fontSize: 12),
-                              ),
+                              Text('Salvar', style: TextStyle(fontSize: 12)),
                             ],
                           ),
                         ),
@@ -119,16 +118,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         borderRadius: BorderRadius.circular(24),
                         onTap: _cancelEdit,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0,
+                            vertical: 2.0,
+                          ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(Icons.cancel, size: 20.0),
                               SizedBox(height: 2),
-                              Text(
-                                'Cancelar',
-                                style: TextStyle(fontSize: 12),
-                              ),
+                              Text('Cancelar', style: TextStyle(fontSize: 12)),
                             ],
                           ),
                         ),
@@ -158,9 +157,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   Center(
                     child: CircleAvatar(
                       radius: 50,
-                      backgroundColor: Theme.of(context).colorScheme.primary.withAlpha(26),
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.primary.withAlpha(26),
                       child: Text(
-                        userProvider.userName.isNotEmpty 
+                        userProvider.userName.isNotEmpty
                             ? userProvider.userName[0].toUpperCase()
                             : 'U',
                         style: const TextStyle(
@@ -207,11 +208,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 labelText: 'Nome',
                                 border: OutlineInputBorder(),
                               ),
-                              validator: (value) =>
-                                  value == null || value.isEmpty ? 'Informe seu nome' : null,
+                              validator:
+                                  (value) =>
+                                      value == null || value.isEmpty
+                                          ? 'Informe seu nome'
+                                          : null,
                             ),
                             const SizedBox(height: 16),
-                            
+
                             TextFormField(
                               controller: _enderecoController,
                               decoration: const InputDecoration(
@@ -220,7 +224,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               ),
                             ),
                             const SizedBox(height: 16),
-                            
+
                             TextFormField(
                               controller: _telefoneController,
                               decoration: const InputDecoration(
@@ -233,15 +237,25 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             _buildInfoRow('Nome', userProvider.userName),
                             const Divider(),
                             _buildInfoRow('E-mail', userProvider.userEmail),
-                            if (userProvider.userData['endereco'] != null && 
-                                userProvider.userData['endereco'].isNotEmpty) ...[
+                            if (userProvider.userData['endereco'] != null &&
+                                userProvider
+                                    .userData['endereco']
+                                    .isNotEmpty) ...[
                               const Divider(),
-                              _buildInfoRow('Endereço', userProvider.userData['endereco']),
+                              _buildInfoRow(
+                                'Endereço',
+                                userProvider.userData['endereco'],
+                              ),
                             ],
-                            if (userProvider.userData['telefone'] != null && 
-                                userProvider.userData['telefone'].isNotEmpty) ...[
+                            if (userProvider.userData['telefone'] != null &&
+                                userProvider
+                                    .userData['telefone']
+                                    .isNotEmpty) ...[
                               const Divider(),
-                              _buildInfoRow('Telefone', userProvider.userData['telefone']),
+                              _buildInfoRow(
+                                'Telefone',
+                                userProvider.userData['telefone'],
+                              ),
                             ],
                           ],
                         ],
@@ -267,7 +281,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         padding: EdgeInsets.all(16.0),
                         child: Row(
                           children: [
-                            Icon(Icons.admin_panel_settings, color: Colors.amber),
+                            Icon(
+                              Icons.admin_panel_settings,
+                              color: Colors.amber,
+                            ),
                             SizedBox(width: 8),
                             Text(
                               'Usuário Master',

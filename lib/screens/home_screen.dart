@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meu_buteco/screens/map_scren.dart';
+import 'package:meu_buteco/screens/map_screen.dart';
 import '../drawer/drawer.dart';
 import '../models/bar_model.dart';
 import '../widgets/bar_card.dart';
@@ -56,10 +56,12 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.sports_bar_sharp,
+                Icon(
+                  Icons.sports_bar_sharp,
                   color: Theme.of(context).colorScheme.onPrimary,
-                ),                
-                Icon(Icons.favorite,
+                ),
+                Icon(
+                  Icons.favorite,
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
                 const SizedBox(width: 8),
@@ -68,9 +70,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onPrimary,
                   ),
-                )
+                ),
               ],
-            )
+            ),
           ],
         ),
         centerTitle: true,
@@ -92,23 +94,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
                 child: Text(
                   'Lista de butecos',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ),
               Expanded(
-                child: bares.isEmpty || bares.length != _expanded.length
-                    ? const Center(child: CircularProgressIndicator())
-                    : ListView.builder(
-                        itemCount: bares.length,
-                        itemBuilder: (context, index) {
-                          final bar = bares[index];
-                          final lat = BarModel.parseCoordinate(bar['lat'], 'lat');
-                          final lng = BarModel.parseCoordinate(bar['long'], 'long');
+                child:
+                    bares.isEmpty || bares.length != _expanded.length
+                        ? const Center(child: CircularProgressIndicator())
+                        : ListView.builder(
+                          itemCount: bares.length,
+                          itemBuilder: (context, index) {
+                            final bar = bares[index];
+                            final lat = BarModel.parseCoordinate(
+                              bar['lat'],
+                              'lat',
+                            );
+                            final lng = BarModel.parseCoordinate(
+                              bar['long'],
+                              'long',
+                            );
 
-                           return BarCard(
+                            return BarCard(
                               bar: bar,
                               lat: lat,
                               lng: lng,
@@ -122,8 +128,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               endereco: BarModel.getEndereco,
                             );
-                        },
-                      ),
+                          },
+                        ),
               ),
             ],
           ),
@@ -136,9 +142,9 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         onTap: (index) {
           if (index == 1) {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => MapBarScreen()),
-            );
+            Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => MapBarScreen()));
           } else {
             setState(() {
               _currentIndex = index;
@@ -151,25 +157,19 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         },
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Início',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Mapa',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Mapa'),
         ],
       ),
     );
   }
-  
+
   void _buscarBares() async {
     try {
       final lista = await BarModel.buscarBares();
       if (mounted) {
         _clearPageStorage();
-        
+
         setState(() {
           bares = lista;
           _expanded = List.generate(lista.length, (_) => false);

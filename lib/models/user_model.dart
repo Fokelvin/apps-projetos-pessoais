@@ -23,7 +23,7 @@ class UserProvider extends ChangeNotifier {
     _loadCurrentUser();
   }
   String get userId => firebaseUser?.uid ?? "";
-  
+
   void signUp({
     required Map<String, dynamic> userData,
     required String pass,
@@ -33,50 +33,53 @@ class UserProvider extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    _auth.createUserWithEmailAndPassword(
-      email: userData["email"],
-      password: pass,
-    ).then((userCredential) async {
-      firebaseUser = userCredential.user;
-      
-      // Envia o e-mail de verificação
-      await firebaseUser?.sendEmailVerification();
-      
-      // Aqui você pode salvar os dados se ainda não existirem
-      await _saveUserData(userData);
+    _auth
+        .createUserWithEmailAndPassword(
+          email: userData["email"],
+          password: pass,
+        )
+        .then((userCredential) async {
+          firebaseUser = userCredential.user;
 
-      onSuccess();
-      isLoading = false;
-      notifyListeners();
-    }).catchError((error) {
-      isLoading = false;
-      notifyListeners();
+          // Envia o e-mail de verificação
+          await firebaseUser?.sendEmailVerification();
 
-      String errorMessage;
+          // Aqui você pode salvar os dados se ainda não existirem
+          await _saveUserData(userData);
 
-      if (error is FirebaseAuthException) {
-        switch (error.code) {
-          case 'email-already-in-use':
-          case 'ERROR_EMAIL_ALREADY_IN_USE':
-            errorMessage = 'Este e-mail já está cadastrado.';
-            break;
-          case 'invalid-email':
-            errorMessage = 'O e-mail fornecido é inválido.';
-            break;
-          case 'weak-password':
-            errorMessage = 'A senha fornecida é muito fraca.';
-            break;
-          default:
-            errorMessage =
-                error.message ?? 'Falha ao criar usuário (Firebase).';
-        }
-      } else {
-        errorMessage = 'Ocorreu um erro desconhecido ao criar o usuário.';
-      }
-      onFail(errorMessage);
-      isLoading = false;
-      notifyListeners();
-    });
+          onSuccess();
+          isLoading = false;
+          notifyListeners();
+        })
+        .catchError((error) {
+          isLoading = false;
+          notifyListeners();
+
+          String errorMessage;
+
+          if (error is FirebaseAuthException) {
+            switch (error.code) {
+              case 'email-already-in-use':
+              case 'ERROR_EMAIL_ALREADY_IN_USE':
+                errorMessage = 'Este e-mail já está cadastrado.';
+                break;
+              case 'invalid-email':
+                errorMessage = 'O e-mail fornecido é inválido.';
+                break;
+              case 'weak-password':
+                errorMessage = 'A senha fornecida é muito fraca.';
+                break;
+              default:
+                errorMessage =
+                    error.message ?? 'Falha ao criar usuário (Firebase).';
+            }
+          } else {
+            errorMessage = 'Ocorreu um erro desconhecido ao criar o usuário.';
+          }
+          onFail(errorMessage);
+          isLoading = false;
+          notifyListeners();
+        });
   }
 
   void signIn({
@@ -91,32 +94,33 @@ class UserProvider extends ChangeNotifier {
     _auth
         .signInWithEmailAndPassword(email: email, password: pass)
         .then((userCredential) async {
-      firebaseUser = userCredential.user;
+          firebaseUser = userCredential.user;
 
-      // RECARREGUE O USUÁRIO AQUI!
-      await firebaseUser?.reload();
-      firebaseUser = _auth.currentUser;
-      
-      if (firebaseUser != null && !firebaseUser!.emailVerified) {
-        _logger.i(firebaseUser);
-        await _auth.signOut();
-        firebaseUser = null;
-        isLoading = false;
-        notifyListeners();
-        onFail('Por favor, verifique seu e-mail antes de acessar.');
-        return;
-      }
+          // RECARREGUE O USUÁRIO AQUI!
+          await firebaseUser?.reload();
+          firebaseUser = _auth.currentUser;
 
-      await _loadCurrentUser();
+          if (firebaseUser != null && !firebaseUser!.emailVerified) {
+            _logger.i(firebaseUser);
+            await _auth.signOut();
+            firebaseUser = null;
+            isLoading = false;
+            notifyListeners();
+            onFail('Por favor, verifique seu e-mail antes de acessar.');
+            return;
+          }
 
-      onSuccess();
-      isLoading = false;
-      notifyListeners();
-    }).catchError((e) {
-      onFail(e);
-      isLoading = false;
-      notifyListeners();
-    });
+          await _loadCurrentUser();
+
+          onSuccess();
+          isLoading = false;
+          notifyListeners();
+        })
+        .catchError((e) {
+          onFail(e);
+          isLoading = false;
+          notifyListeners();
+        });
   }
 
   Future<void> _saveUserData(Map<String, dynamic> userData) async {
@@ -127,18 +131,18 @@ class UserProvider extends ChangeNotifier {
         .set(userData);
   }
 
-Future<void> recoverPass({
-  required String email,
-  required VoidCallback onSuccess,
-  required Function(String) onFail,
-}) async {
-  try {
-    await _auth.sendPasswordResetEmail(email: email);
-    onSuccess();
-  } catch (e) {
-    onFail(e.toString());
+  Future<void> recoverPass({
+    required String email,
+    required VoidCallback onSuccess,
+    required Function(String) onFail,
+  }) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      onSuccess();
+    } catch (e) {
+      onFail(e.toString());
+    }
   }
-}
 
   // Método isLogged estava vazio, removido para evitar confusão
   // Se precisar, pode implementar uma lógica específica aqui
@@ -150,7 +154,7 @@ Future<void> recoverPass({
   void signOut() async {
     isLoading = true;
     notifyListeners();
-    
+
     await Future.delayed(Duration(seconds: 1));
     await _auth.signOut();
     userData = {};
@@ -173,10 +177,11 @@ Future<void> recoverPass({
 
     if (firebaseUser != null) {
       if (userData["name"] == null) {
-        DocumentSnapshot docUser = await FirebaseFirestore.instance
-            .collection("users")
-            .doc(firebaseUser!.uid)
-            .get();
+        DocumentSnapshot docUser =
+            await FirebaseFirestore.instance
+                .collection("users")
+                .doc(firebaseUser!.uid)
+                .get();
         userData = docUser.data() as Map<String, dynamic>? ?? {};
       }
     }
@@ -193,13 +198,13 @@ Future<void> recoverPass({
     required String endereco,
     required String telefone,
   }) async {
-  // Aqui você pode fazer a chamada para o backend, Firebase, etc.
-  // Exemplo simples:
-  userData['name'] = nome;
-  userData['endereco'] = endereco;
-  userData['telefone'] = telefone;
-  notifyListeners();
-}
+    // Aqui você pode fazer a chamada para o backend, Firebase, etc.
+    // Exemplo simples:
+    userData['name'] = nome;
+    userData['endereco'] = endereco;
+    userData['telefone'] = telefone;
+    notifyListeners();
+  }
 
   // Getters úteis para acessar dados do usuário
   String get userName => userData["name"] ?? "";

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meu_buteco/screens/bar_screen.dart';
-import 'package:meu_buteco/screens/map_scren.dart';
+import 'package:meu_buteco/screens/map_screen.dart';
 import 'ratings_widget.dart';
 import '../screens/rating_screen.dart';
 import '../models/rating_model.dart';
@@ -50,12 +50,18 @@ class _BarCardState extends State<BarCard> {
           children: [
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 500),
-              transitionBuilder: (child, animation) => RotationTransition(
-                turns: Tween<double>(begin: 0.0, end: 0.5).animate(animation),
-                child: child,
-              ),
+              transitionBuilder:
+                  (child, animation) => RotationTransition(
+                    turns: Tween<double>(
+                      begin: 0.0,
+                      end: 0.5,
+                    ).animate(animation),
+                    child: child,
+                  ),
               child: Icon(
-                widget.expanded ? Icons.remove_circle_outline : Icons.add_circle_outline,
+                widget.expanded
+                    ? Icons.remove_circle_outline
+                    : Icons.add_circle_outline,
                 key: ValueKey(widget.expanded),
                 color: Colors.black,
               ),
@@ -75,13 +81,20 @@ class _BarCardState extends State<BarCard> {
             children: [
               CircleAvatar(
                 radius: 26,
-                backgroundColor: Theme.of(context).colorScheme.primary.withAlpha(26),
-                backgroundImage: (widget.bar["linkImagem"] != null && widget.bar["linkImagem"].toString().isNotEmpty)
-                    ? NetworkImage(widget.bar["linkImagem"])
-                    : const AssetImage('assets/icon/icon.png') as ImageProvider,
-                child: (widget.bar["linkImagem"] == null || widget.bar["linkImagem"].toString().isEmpty)
-                    ? null
-                    : null,
+                backgroundColor: Theme.of(
+                  context,
+                ).colorScheme.primary.withAlpha(26),
+                backgroundImage:
+                    (widget.bar["linkImagem"] != null &&
+                            widget.bar["linkImagem"].toString().isNotEmpty)
+                        ? NetworkImage(widget.bar["linkImagem"])
+                        : const AssetImage('assets/icon/icon.png')
+                            as ImageProvider,
+                child:
+                    (widget.bar["linkImagem"] == null ||
+                            widget.bar["linkImagem"].toString().isEmpty)
+                        ? null
+                        : null,
               ),
               const SizedBox(height: 2),
             ],
@@ -104,8 +117,7 @@ class _BarCardState extends State<BarCard> {
         onExpansionChanged: widget.onExpansionChanged,
         children: [
           Container(
-            constraints: const BoxConstraints(
-            ),
+            constraints: const BoxConstraints(),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: SingleChildScrollView(
@@ -124,33 +136,46 @@ class _BarCardState extends State<BarCard> {
                     const SizedBox(height: 12),
                     FutureBuilder<Map<String, dynamic>>(
                       key: _futureBuilderKey,
-                      future: AvaliacaoModel.calcularMediaAvaliacoes(widget.bar['id'] ?? ''),
+                      future: AvaliacaoModel.calcularMediaAvaliacoes(
+                        widget.bar['id'] ?? '',
+                      ),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
                         }
 
-                        final data = snapshot.data ?? {
-                          'success': true,
-                          'mediaGeral': 0.0,
-                          'medias': {
-                            'banheiro': 0.0,
-                            'bebidas': 0.0,
-                            'comidas': 0.0,
-                            'atendimento': 0.0,
-                            'precos': 0.0,
-                          },
-                          'totalAvaliacoes': 0,
-                        };
+                        final data =
+                            snapshot.data ??
+                            {
+                              'success': true,
+                              'mediaGeral': 0.0,
+                              'medias': {
+                                'banheiro': 0.0,
+                                'bebidas': 0.0,
+                                'comidas': 0.0,
+                                'atendimento': 0.0,
+                                'precos': 0.0,
+                              },
+                              'totalAvaliacoes': 0,
+                            };
 
-                        final medias = (data['medias'] ?? {
-                          'banheiro': 0.0,
-                          'bebidas': 0.0,
-                          'comidas': 0.0,
-                          'atendimento': 0.0,
-                          'precos': 0.0,
-                        }) as Map<String, dynamic>;
-                        final totalAvaliacoes = (data['totalAvaliacoes'] is int) ? data['totalAvaliacoes'] as int : 0;
+                        final medias =
+                            (data['medias'] ??
+                                    {
+                                      'banheiro': 0.0,
+                                      'bebidas': 0.0,
+                                      'comidas': 0.0,
+                                      'atendimento': 0.0,
+                                      'precos': 0.0,
+                                    })
+                                as Map<String, dynamic>;
+                        final totalAvaliacoes =
+                            (data['totalAvaliacoes'] is int)
+                                ? data['totalAvaliacoes'] as int
+                                : 0;
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,7 +215,11 @@ class _BarCardState extends State<BarCard> {
                             const SizedBox(height: 12),
                             Row(
                               children: [
-                                const Icon(Icons.wc, size: 16, color: Colors.blue),
+                                const Icon(
+                                  Icons.wc,
+                                  size: 16,
+                                  color: Colors.blue,
+                                ),
                                 const SizedBox(width: 8),
                                 const Expanded(child: Text("Banheiro")),
                                 RatingsWidget(rating: medias['banheiro']),
@@ -199,7 +228,11 @@ class _BarCardState extends State<BarCard> {
                             const SizedBox(height: 8),
                             Row(
                               children: [
-                                const Icon(Icons.local_bar, size: 16, color: Colors.orange),
+                                const Icon(
+                                  Icons.local_bar,
+                                  size: 16,
+                                  color: Colors.orange,
+                                ),
                                 const SizedBox(width: 8),
                                 const Expanded(child: Text("Bebidas")),
                                 RatingsWidget(rating: medias['bebidas']),
@@ -208,7 +241,11 @@ class _BarCardState extends State<BarCard> {
                             const SizedBox(height: 8),
                             Row(
                               children: [
-                                const Icon(Icons.restaurant, size: 16, color: Colors.green),
+                                const Icon(
+                                  Icons.restaurant,
+                                  size: 16,
+                                  color: Colors.green,
+                                ),
                                 const SizedBox(width: 8),
                                 const Expanded(child: Text("Comidas")),
                                 RatingsWidget(rating: medias['comidas']),
@@ -217,7 +254,11 @@ class _BarCardState extends State<BarCard> {
                             const SizedBox(height: 8),
                             Row(
                               children: [
-                                const Icon(Icons.group, size: 16, color: Colors.purple),
+                                const Icon(
+                                  Icons.group,
+                                  size: 16,
+                                  color: Colors.purple,
+                                ),
                                 const SizedBox(width: 8),
                                 const Expanded(child: Text("Atendimento")),
                                 RatingsWidget(rating: medias['atendimento']),
@@ -226,7 +267,11 @@ class _BarCardState extends State<BarCard> {
                             const SizedBox(height: 8),
                             Row(
                               children: [
-                                const Icon(Icons.currency_exchange, size: 16, color: Colors.amber),
+                                const Icon(
+                                  Icons.currency_exchange,
+                                  size: 16,
+                                  color: Colors.amber,
+                                ),
                                 const SizedBox(width: 8),
                                 const Expanded(child: Text("Preços")),
                                 RatingsWidget(rating: medias['precos']),
@@ -244,10 +289,13 @@ class _BarCardState extends State<BarCard> {
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => BarScreen(
-                                  bar: widget.bar,
-                                  endereco: enderecoAtual ?? "Endereço não encontrado",
-                                ),
+                                builder:
+                                    (context) => BarScreen(
+                                      bar: widget.bar,
+                                      endereco:
+                                          enderecoAtual ??
+                                          "Endereço não encontrado",
+                                    ),
                               ),
                             );
                           },
@@ -261,10 +309,17 @@ class _BarCardState extends State<BarCard> {
                         ),
                         TextButton(
                           onPressed: () async {
-                            final userProvider = Provider.of<UserProvider>(context, listen: false);
-                            if(!userProvider.isLoggedIn()){
+                            final userProvider = Provider.of<UserProvider>(
+                              context,
+                              listen: false,
+                            );
+                            if (!userProvider.isLoggedIn()) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Voce precisa estar logado para avaliar')),
+                                const SnackBar(
+                                  content: Text(
+                                    'Voce precisa estar logado para avaliar',
+                                  ),
+                                ),
                               );
                               Navigator.of(context).pushNamed('/login');
                               return;
@@ -272,9 +327,10 @@ class _BarCardState extends State<BarCard> {
                             await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => RatingScreen(
-                                  barId: widget.bar['id'] ?? '',
-                                ),
+                                builder:
+                                    (context) => RatingScreen(
+                                      barId: widget.bar['id'] ?? '',
+                                    ),
                               ),
                             );
                             _atualizarAvaliacoes();
@@ -291,12 +347,13 @@ class _BarCardState extends State<BarCard> {
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => MapBarScreen(
-                                  lat: widget.lat,
-                                  long: widget.lng,
-                                  barName: widget.bar['nome'],
-                                )
-                              )
+                                builder:
+                                    (context) => MapBarScreen(
+                                      lat: widget.lat,
+                                      long: widget.lng,
+                                      barName: widget.bar['nome'],
+                                    ),
+                              ),
                             );
                           },
                           child: const Text(

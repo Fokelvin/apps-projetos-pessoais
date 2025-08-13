@@ -8,9 +8,8 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget buildDrawerBack() => Container(
-      color: Theme.of(context).colorScheme.primary,
-    );
+    Widget buildDrawerBack() =>
+        Container(color: Theme.of(context).colorScheme.primary);
 
     return Drawer(
       child: IconTheme(
@@ -21,8 +20,8 @@ class AppDrawer extends StatelessWidget {
           data: Theme.of(context).copyWith(
             listTileTheme: ListTileThemeData(
               selectedColor: Colors.black, // cor do texto/ícone selecionado
-              iconColor: Colors.black,     // cor dos ícones
-              textColor: Colors.black,    
+              iconColor: Colors.black, // cor dos ícones
+              textColor: Colors.black,
               selectedTileColor: Colors.transparent, // cor do texto
             ),
           ),
@@ -74,11 +73,18 @@ class AppDrawer extends StatelessWidget {
                                     padding: const EdgeInsets.only(top: 8.0),
                                     child: Row(
                                       children: [
-                                        Icon(isLogged ? Icons.logout : Icons.login, size: 20, color: Colors.black),
+                                        Icon(
+                                          isLogged ? Icons.logout : Icons.login,
+                                          size: 20,
+                                          color: Colors.black,
+                                        ),
                                         const SizedBox(width: 8),
                                         Text(
                                           isLogged ? "Sair" : "Login",
-                                          style: const TextStyle(color: Colors.black, fontSize: 20),
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 20,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -97,7 +103,8 @@ class AppDrawer extends StatelessWidget {
                       return Column(
                         children: [
                           // Mostrar opção de cadastrar bar apenas se estiver logado
-                          if (userProvider.isLoggedIn() && userProvider.userEmail =="kelvindc@hotmail.com")
+                          if (userProvider.isLoggedIn() &&
+                              userProvider.userEmail == "kelvindc@hotmail.com")
                             ListTile(
                               leading: const Icon(Icons.add_business),
                               title: const Text("Cadastrar Bar"),
@@ -110,19 +117,26 @@ class AppDrawer extends StatelessWidget {
                               },
                             ),
                           // Mostrar opções de master se for usuário master
-                          if (userProvider.isLoggedIn() && userProvider.isMaster)
+                          if (userProvider.isLoggedIn() &&
+                              userProvider.isMaster)
                             ListTile(
                               leading: const Icon(Icons.admin_panel_settings),
                               title: const Text("Painel Admin"),
                               onTap: () {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Funcionalidade em desenvolvimento')),
+                                  const SnackBar(
+                                    content: Text(
+                                      'Funcionalidade em desenvolvimento',
+                                    ),
+                                  ),
                                 );
                               },
                             ),
                           // Outras opções do menu
                           ListTile(
-                            leading: Icon(Icons.home), // não precisa mais definir cor aqui
+                            leading: Icon(
+                              Icons.home,
+                            ), // não precisa mais definir cor aqui
                             title: Text("Início"),
                             onTap: () {
                               Navigator.of(context).pushNamed('/');

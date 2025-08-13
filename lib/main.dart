@@ -23,11 +23,11 @@ class MainApp extends StatelessWidget {
         theme: meuButecoTheme,
         home: HomeScreen(),
         routes: {
-          '/home' : (context) => HomeScreen(),
+          '/home': (context) => HomeScreen(),
           '/login': (context) => const LoginScreen(),
           '/signup': (context) => const RegisterUserScreen(),
           '/userProfile': (context) => const UserProfileScreen(),
-          '/search_bar' :(context) => const SearchScreen(),
+          '/search_bar': (context) => const SearchScreen(),
         },
       ),
     );
@@ -37,9 +37,10 @@ class MainApp extends StatelessWidget {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform, // ou apenas Firebase.initializeApp();
+    options:
+        DefaultFirebaseOptions
+            .currentPlatform, // ou apenas Firebase.initializeApp();
   );
   await dotenv.load(fileName: ".env");
   runApp(MainApp());
 }
-
